@@ -25,9 +25,9 @@ async function handleSubmit() {
 </script>
 
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-        <form @submit.prevent="handleSubmit" class="mx-auto p-6 bg-white rounded shadow md:w-lg">
-            <h1 class="text-xl font-semibold italic text-center text-gray-800">
+    <div class="flex items-center justify-center min-h-screen bg-gray-100 py-10">
+        <form @submit.prevent="handleSubmit" class="mx-auto p-6 bg-white rounded shadow md:w-xl">
+            <h1 class="text-xl font-semibold italic text-center text-gray-800 pt-10 py-5">
                 <span>Log in To </span>
                 <span class="text-blue-600">Task </span>
                 <span>Manager</span>
@@ -65,7 +65,7 @@ async function handleSubmit() {
                 {{ errorMessage.invalid[0] }}
             </p>
 
-            <div class="flex justify-center my-5">
+            <div class="flex justify-center my-10">
                 <button
                     type="submit"
                     :disabled="loading"
@@ -75,11 +75,13 @@ async function handleSubmit() {
                 </button>
             </div>
 
-            <div class="text-blue-600 font-medium">
+            <div class="text-blue-600 font-medium mt-10 mb-5 grid grid-cols-1 gap-2 md:grid-cols-2">
                 <router-link :to="{ name: 'register' }">
                     Don't have an account yet? Register
                 </router-link>
-                <p>Forgot Password</p>
+                <router-link :to="{ name: 'forgot-password' }" class="md:text-right">
+                    Forgot Password
+                </router-link>
             </div>
         </form>
     </div>

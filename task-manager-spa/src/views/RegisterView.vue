@@ -93,7 +93,7 @@ async function handleSubmit() {
                 {{ errorMessage.invalid[0] }}
             </p>
 
-            <div class="flex justify-center">
+            <div class="flex justify-center my-10">
                 <button
                     type="submit"
                     :disabled="loading"
@@ -101,6 +101,10 @@ async function handleSubmit() {
                 >
                     {{ loading ? 'Registering...' : 'Register' }}
                 </button>
+            </div>
+
+            <div class="text-blue-600 font-medium mt-10 mb-5">
+                <router-link :to="{ name: 'login' }"> Already have an account? Login </router-link>
             </div>
         </form>
     </div>
