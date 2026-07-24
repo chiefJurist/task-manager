@@ -1,1 +1,6 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where(.dark, .dark *));
+
+.brand-transition {
+    @apply transition duration-500 ease-out;
+}

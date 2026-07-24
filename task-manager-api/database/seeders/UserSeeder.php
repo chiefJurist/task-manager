@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
 
         //unpredictable users
         User::factory()
-            ->count(10)
+            ->count(2)
             ->hasProjects(3)
             ->has(
                 Task::factory()
