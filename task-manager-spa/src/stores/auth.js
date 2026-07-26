@@ -5,6 +5,7 @@ import router from '../router/index'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
+    const initialized = ref(false)
 
     async function register(name, email, password, password_confirmation) {
         await api.get('/sanctum/csrf-cookie')
@@ -15,6 +16,7 @@ export const useAuthStore = defineStore('auth', () => {
             password_confirmation,
         })
         user.value = response.data.data
+        initialized.value = true
         router.push({ name: 'dashboard' })
     }
 
@@ -22,6 +24,7 @@ export const useAuthStore = defineStore('auth', () => {
         await api.get('/sanctum/csrf-cookie')
         const response = await api.post('/api/login', { email, password })
         user.value = response.data.data
+        initialized.value = true
         await router.push({ name: 'dashboard' })
     }
 
@@ -34,9 +37,11 @@ export const useAuthStore = defineStore('auth', () => {
     async function fetchUser() {
         try {
             const response = await api.get('/api/user')
-            user.value = response.data.data
+            user.value = response.data.user
         } catch (error) {
             user.value = null
+        } finally {
+            initialized.value = true
         }
     }
     return { user, register, login, logout, fetchUser }

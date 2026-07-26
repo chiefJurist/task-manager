@@ -68,9 +68,18 @@ async function handleSubmit() {
             <div class="flex justify-center my-10">
                 <button
                     type="submit"
-                    :disabled="loading"
-                    class="min-w-2xs p-3 bg-blue-600 hover:bg-blue-400 text-white font-semibold rounded-lg cursor-pointer brand-transition"
+                    :class="
+                        loading
+                            ? 'bg-blue-400 cursor-not-allowed my-5 min-w-2xs p-3 text-white font-semibold rounded-lg'
+                            : 'my-5 min-w-2xs p-3 bg-blue-600 hover:bg-blue-400 text-white font-semibold rounded-lg cursor-pointer brand-transition'
+                    "
                 >
+                    <img
+                        v-if="loading"
+                        src="../assets/images/mingcute--loading-fill.svg"
+                        class="animate-spin inline mr-2"
+                    />
+
                     {{ loading ? 'Logging in...' : 'Log in' }}
                 </button>
             </div>
