@@ -4,3 +4,6 @@
 .brand-transition {
     @apply transition duration-500 ease-out;
 }
+.mobile-menu-link {
+    @apply block text-lg font-medium;
+}
