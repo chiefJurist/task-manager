@@ -5,6 +5,8 @@ import router from '../router/index'
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
+    const projects = ref([])
+    const tasks = ref([])
     const initialized = ref(false)
 
     async function register(name, email, password, password_confirmation) {
@@ -44,5 +46,27 @@ export const useAuthStore = defineStore('auth', () => {
             initialized.value = true
         }
     }
-    return { user, register, login, logout, fetchUser }
+
+    async function fetchProjects() {
+        const response = await api.get('/api/projects')
+        projects.value = response.data.data
+    }
+
+    async function fetchTasks() {
+        const response = await api.get('/api/tasks')
+        tasks.value = response.data.data
+    }
+
+    return {
+        user,
+        initialized,
+        projects,
+        tasks,
+        register,
+        login,
+        logout,
+        fetchUser,
+        fetchProjects,
+        fetchTasks,
+    }
 })

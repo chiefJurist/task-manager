@@ -1,12 +1,17 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/auth'
 
 const auth = useAuthStore()
-const firstName = computed(() => auth.user?.name?.split(' ')[0])
-const userData = computed(() => auth.user)
+const { user, tasks, projects } = storeToRefs(auth)
 
-console.log(userData)
+const firstName = computed(() => user.value.name.split(' ')[0])
+const hasNothing = computed(() => !projects.value.length && !tasks.value.length)
+
+onMounted(() => {
+    ;(auth.fetchProjects(), auth.fetchTasks())
+})
 </script>
 <template>
     <div>
@@ -29,13 +34,11 @@ console.log(userData)
                 </div>
             </div>
         </header>
-        <section v-if="!userData.projects" class="py-32">
-            <div>Nil</div>
+        <section v-if="hasNothing" class="py-32">
+            <div>You have no available projects or tasks</div>
         </section>
-        <section>
-            <div>
-                <div></div>
-            </div>
+        <section v-else class="py-32">
+            <div v-for="task in tasks" :key="task.id">{{ task.name }} 123</div>
         </section>
     </div>
 </template>
