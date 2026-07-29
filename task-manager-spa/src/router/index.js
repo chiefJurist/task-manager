@@ -29,9 +29,15 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: '/create-projects',
+            path: '/create-project',
             name: 'create-project',
             component: () => import('../views/ProjectCreateView.vue'),
+            meta: { requiresAuth: true },
+        },
+        {
+            path: '/project/',
+            name: 'show-project',
+            component: () => import('../views/ProjectShowView.vue'),
             meta: { requiresAuth: true },
         },
         {
@@ -41,7 +47,7 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: '/task/{id}',
+            path: '/task/',
             name: 'show-task',
             component: () => import('../views/TaskShowView.vue'),
             meta: { requiresAuth: true },

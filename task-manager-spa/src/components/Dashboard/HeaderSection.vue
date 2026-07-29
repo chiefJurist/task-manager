@@ -11,8 +11,9 @@ defineEmits(['logout', 'toggleMenu'])
     >
         <div class="font-semibold max-w-4xl mx-auto px-6 lg:px-8 py-5">
             <div class="flex items-center justify-between">
-                <h1>Hello, {{ firstName }}!</h1>
-                <!--Large Screen Project and Task Buttons-->
+                <h1 class="text-2xl font-bold">Hello, {{ firstName }}!</h1>
+
+                <!--Desktop Project and Task Buttons-->
                 <div class="hidden md:block">
                     <router-link
                         :to="{ name: 'create-project' }"
@@ -28,7 +29,7 @@ defineEmits(['logout', 'toggleMenu'])
                     </router-link>
                 </div>
 
-                <!--Large screen logout button-->
+                <!--Desktop logout button-->
                 <div class="hidden md:block">
                     <button
                         @click="$emit('logout')"
