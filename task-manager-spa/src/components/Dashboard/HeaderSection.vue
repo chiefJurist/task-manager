@@ -14,7 +14,12 @@ defineEmits(['logout', 'toggleMenu'])
                 <h1>Hello, {{ firstName }}!</h1>
                 <!--Large Screen Project and Task Buttons-->
                 <div class="hidden md:block">
-                    <button class="desktop-menu-link brand-transition">Add Project</button>
+                    <router-link
+                        :to="{ name: 'create-project' }"
+                        class="desktop-menu-link brand-transition"
+                    >
+                        Add Project
+                    </router-link>
                     <router-link
                         :to="{ name: 'create-task' }"
                         class="desktop-menu-link brand-transition"
@@ -66,11 +71,13 @@ defineEmits(['logout', 'toggleMenu'])
             >
                 <div v-if="mobileMenuDisplay" class="md:hidden border-t border-slate-200">
                     <div class="p-6 space-y-3">
-                        <router-link :to="{ name: 'create-task' }" class="mobile-menu-link">
+                        <router-link :to="{ name: 'create-project' }" class="mobile-menu-link">
                             Add Project
                         </router-link>
-                        <button class="mobile-menu-link">Add Task</button>
-                        <button class="mobile-menu-link">Logout</button>
+                        <router-link :to="{ name: 'create-task' }" class="mobile-menu-link">
+                            Add Task
+                        </router-link>
+                        <button @click="$emit('logout')" class="mobile-menu-link">Logout</button>
                     </div>
                 </div>
             </transition>
