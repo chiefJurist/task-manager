@@ -34,29 +34,29 @@ async function handleSubmit() {
             </h1>
 
             <div class="my-5">
-                <label class="text-gray-700 font-semibold">Email</label>
+                <label class="form-label">Email</label>
                 <input
                     v-model="email"
                     type="email"
                     required
                     placeholder="gavinbelson@gmail.com"
-                    class="outline-none p-3 w-full rounded-lg ring ring-blue-500 focus:ring-2 focus:bg-blue-50"
+                    class="form-input"
                 />
-                <p v-if="errorMessage.email" class="text-sm text-red-600 mt-1">
+                <p v-if="errorMessage.email" class="form-error">
                     {{ errorMessage.email[0] }}
                 </p>
             </div>
 
             <div class="my-5">
-                <label class="text-gray-700 font-semibold">Password</label>
+                <label class="form-label">Password</label>
                 <input
                     v-model="password"
                     type="password"
                     required
                     placeholder="hoolipassword123"
-                    class="outline-none p-3 w-full rounded-lg ring ring-blue-500 focus:ring-2 focus:bg-blue-50"
+                    class="form-input"
                 />
-                <p v-if="errorMessage.password" class="text-sm text-red-600 mt-1">
+                <p v-if="errorMessage.password" class="form-error">
                     {{ errorMessage.password[0] }}
                 </p>
             </div>
@@ -66,14 +66,7 @@ async function handleSubmit() {
             </p>
 
             <div class="flex justify-center my-10">
-                <button
-                    type="submit"
-                    :class="
-                        loading
-                            ? 'bg-blue-400 cursor-not-allowed my-5 min-w-2xs p-3 text-white font-semibold rounded-lg'
-                            : 'my-5 min-w-2xs p-3 bg-blue-600 hover:bg-blue-400 text-white font-semibold rounded-lg cursor-pointer brand-transition'
-                    "
-                >
+                <button type="submit" :class="loading ? 'form-loading' : 'form-before-loading'">
                     <img
                         v-if="loading"
                         src="../assets/images/mingcute--loading-fill.svg"

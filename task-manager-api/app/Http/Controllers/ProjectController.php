@@ -14,7 +14,7 @@ class ProjectController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Project::class);
-        $projects = $request->user()->projects()->orderBy('name')->get();
+        $projects = $request->user()->projects()->with('tasks')->orderBy('name')->get();
         
         return ProjectResource::collection($projects);
     }
