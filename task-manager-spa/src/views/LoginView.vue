@@ -66,7 +66,10 @@ async function handleSubmit() {
             </p>
 
             <div class="flex justify-center my-10">
-                <button type="submit" :class="loading ? 'form-loading' : 'form-before-loading'">
+                <button
+                    type="submit"
+                    :class="loading ? 'form-loading' : 'form-before-loading brand-transition'"
+                >
                     <img
                         v-if="loading"
                         src="../assets/images/mingcute--loading-fill.svg"
