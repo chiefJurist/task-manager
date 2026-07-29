@@ -7,21 +7,21 @@
                 <span>Details</span>
             </div>
 
-            <div class="font-medium text-slate-500 text-center py-3">
+            <div class="font-medium text-slate-500 text-center my-3">
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nulla, ab.
             </div>
 
-            <div class="py-2 text-center font-medium text-slate-400">Priority Number 10</div>
+            <div class="my-3 text-center font-medium text-slate-400">Priority Number 10</div>
 
             <div
-                class="mt-6 mb-3 flex justify-between items-center gap-5 flex-wrap italic text-slate-400"
+                class="my-10 flex justify-between items-center gap-5 flex-wrap italic text-slate-400"
             >
                 <div>Created 10</div>
 
                 <div>Last Edited at 10</div>
             </div>
 
-            <div class="flex justify-between items-center flex-wrap gap-3 my-6">
+            <div class="flex justify-between items-center flex-wrap gap-3 my-10">
                 <button
                     class="bg-emerald-600 hover:bg-emerald-400 cursor-pointer text-white p-3 rounded-xl font-medium"
                 >
