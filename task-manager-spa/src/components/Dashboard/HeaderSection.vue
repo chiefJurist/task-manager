@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 
-defineProps(['firstName', 'mobileMenuDisplay'])
+defineProps(['firstName', 'mobileMenuDisplay', 'logoutLoading'])
 defineEmits(['logout', 'toggleMenu'])
 </script>
 
@@ -33,9 +33,13 @@ defineEmits(['logout', 'toggleMenu'])
                 <div class="hidden md:block">
                     <button
                         @click="$emit('logout')"
-                        class="bg-red-600/80 px-5 py-3 rounded cursor-pointer mr-3 hover:bg-red-400 brand-transition"
+                        :class="
+                            logoutLoading
+                                ? 'bg-red-400 px-5 py-3 rounded mr-3 brand-transition cursor-not-allowed'
+                                : 'bg-red-600/80 px-5 py-3 rounded cursor-pointer mr-3 hover:bg-red-400 brand-transition'
+                        "
                     >
-                        Log out
+                        {{ logoutLoading ? 'Logging out...' : 'Logout' }}
                     </button>
                 </div>
 
@@ -78,7 +82,9 @@ defineEmits(['logout', 'toggleMenu'])
                         <router-link :to="{ name: 'create-task' }" class="mobile-menu-link">
                             Add Task
                         </router-link>
-                        <button @click="$emit('logout')" class="mobile-menu-link">Logout</button>
+                        <button @click="$emit('logout')" class="mobile-menu-link">
+                            {{ logoutLoading ? 'Logging out...' : 'Logout' }}
+                        </button>
                     </div>
                 </div>
             </transition>

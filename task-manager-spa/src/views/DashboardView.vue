@@ -7,16 +7,23 @@ import HeaderSection from '@/components/Dashboard/HeaderSection.vue'
 const auth = useAuthStore()
 const { user, tasks, projects } = storeToRefs(auth)
 const mobileMenuDisplay = ref(false)
+const logoutLoading = ref(false)
+
 const firstName = computed(() => {
     const name = user.value.name.split(' ')[0]
     return name.length > 20 ? name.substring(0, 15) + '...' : name
 })
 const hasNothing = computed(() => !projects.value.length && !tasks.value.length)
-
 const openProject = ref(null)
 
 function toggelMobileMenuDisplay() {
     mobileMenuDisplay.value = !mobileMenuDisplay.value
+}
+
+function logout() {
+    logoutLoading.value = true
+    auth.logout()
+    logoutLoading.value = false
 }
 
 function toggeleOpenProject(id) {
@@ -36,7 +43,8 @@ onMounted(() => {
         <HeaderSection
             :firstName="firstName"
             :mobile-menu-display="mobileMenuDisplay"
-            @logout="auth.logout"
+            :logoutLoading="logoutLoading"
+            @logout="logout"
             @toggle-menu="toggelMobileMenuDisplay"
         />
 
