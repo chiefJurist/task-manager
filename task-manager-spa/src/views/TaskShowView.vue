@@ -1,7 +1,14 @@
-<script></script>
+<script setup></script>
 <template>
     <section class="min-h-screen bg-slate-100 flex justify-center items-center px-3 py-8">
         <div class="bg-emerald-50 shadow rounded-lg p-5">
+            <router-link
+                :to="{ name: 'dashboard' }"
+                class="block mt-3 mb-6 text-emerald-600 hover:text-emerald-500 font-medium"
+            >
+                Back to Dashboard
+            </router-link>
+
             <div class="text-center font-bold text-xl py-3">
                 <span class="text-emerald-600">Task </span>
                 <span>Details</span>

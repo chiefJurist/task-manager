@@ -28,7 +28,10 @@ onMounted(() => {
         />
 
         <!-- empty task and project display -->
-        <section v-if="hasNothing" class="py-32 italic font-semibold text-lg px-6 lg:px-8">
+        <section
+            v-if="hasNothing"
+            class="py-32 italic font-semibold text-lg px-6 lg:px-8 text-blue-500"
+        >
             <div class="text-center">You have no available projects or tasks</div>
         </section>
 

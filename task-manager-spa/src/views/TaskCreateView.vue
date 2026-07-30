@@ -4,13 +4,16 @@ import { RouterLink } from 'vue-router'
 <template>
     <section class="min-h-screen bg-slate-100 flex justify-center items-center px-3 py-8">
         <form class="bg-white text-slate-700 p-5 rounded-lg shadow">
-            <router-link :to="{ name: 'dashboard' }" class="font-semibold text-blue-600 block mb-5">
+            <router-link
+                :to="{ name: 'dashboard' }"
+                class="font-semibold text-blue-600 hover:text-blue-400 block mb-5"
+            >
                 Back to Dashboard
             </router-link>
 
             <div class="text-xl font-bold text-center py-5">Create a Task</div>
 
-            <div class="my-5">
+            <div class="my-10">
                 <label class="form-label">Task Name</label>
                 <input type="text" required placeholder="Input your task name" class="form-input" />
                 <!-- <p v-if="errorMessage.name" class="form-error">
@@ -18,7 +21,7 @@ import { RouterLink } from 'vue-router'
                 </p> -->
             </div>
 
-            <div class="my-5">
+            <div class="my-10">
                 <label class="form-label">Choose Associated Project</label>
                 <select class="form-input">
                     <option value="">Select a Project</option>
@@ -31,7 +34,7 @@ import { RouterLink } from 'vue-router'
                 </p> -->
             </div>
 
-            <div class="flex justify-center my-10">
+            <div class="flex justify-center my-14">
                 <button
                     type="submit"
                     :class="false ? 'form-loading' : 'form-before-loading brand-transition'"
