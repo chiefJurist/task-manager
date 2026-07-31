@@ -20,10 +20,13 @@ function toggelMobileMenuDisplay() {
     mobileMenuDisplay.value = !mobileMenuDisplay.value
 }
 
-function logout() {
+async function logout() {
     logoutLoading.value = true
-    auth.logout()
-    logoutLoading.value = false
+    try {
+        await auth.logout()
+    } finally {
+        logoutLoading.value = false
+    }
 }
 
 function toggeleOpenProject(id) {
