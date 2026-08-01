@@ -1,19 +1,18 @@
 <script setup>
+import BackIcon from '@/components/Icons/BackIcon.vue'
 import { RouterLink } from 'vue-router'
 </script>
 <template>
-    <section class="min-h-screen bg-slate-100 flex justify-center items-center px-3 py-8">
-        <form class="bg-white text-slate-700 p-5 rounded-lg shadow">
-            <router-link
-                :to="{ name: 'dashboard' }"
-                class="font-semibold text-blue-600 hover:text-blue-400 block mb-5"
-            >
-                Back to Dashboard
+    <section class="view-section">
+        <form class="view-sub-section">
+            <router-link :to="{ name: 'dashboard' }" class="nav-link">
+                <span><BackIcon /></span>
+                <span>Back to Dashboard</span>
             </router-link>
 
-            <div class="text-xl font-bold text-center py-5">Create a Project</div>
+            <h1 class="view-header">CREATE A PROJECT</h1>
 
-            <div class="my-5">
+            <div class="mt-10">
                 <label class="form-label">Project Name</label>
                 <input
                     type="text"
@@ -26,18 +25,16 @@ import { RouterLink } from 'vue-router'
                 </p> -->
             </div>
 
-            <div class="flex justify-center my-10">
+            <div class="flex justify-center my-5">
                 <button
                     type="submit"
                     :class="false ? 'form-loading' : 'form-before-loading brand-transition'"
                 >
-                    <img
-                        v-if="false"
-                        src="../assets/images/mingcute--loading-fill.svg"
-                        class="animate-spin inline mr-2"
-                    />
+                    <span v-if="false">
+                        <LoadingIcon />
+                    </span>
 
-                    {{ false ? 'Saving...' : 'Save Project' }}
+                    <span>{{ false ? 'Creating...' : 'Create Task' }}</span>
                 </button>
             </div>
         </form>

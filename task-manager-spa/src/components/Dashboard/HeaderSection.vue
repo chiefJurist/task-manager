@@ -19,13 +19,13 @@ defineEmits(['logout', 'toggleMenu'])
                         :to="{ name: 'create-project' }"
                         class="desktop-menu-link brand-transition"
                     >
-                        Add Project
+                        Create Project
                     </router-link>
                     <router-link
                         :to="{ name: 'create-task' }"
                         class="desktop-menu-link brand-transition"
                     >
-                        Add Task
+                        Create Task
                     </router-link>
                 </div>
 
@@ -77,10 +77,10 @@ defineEmits(['logout', 'toggleMenu'])
                 <div v-if="mobileMenuDisplay" class="md:hidden border-t border-slate-200">
                     <div class="p-6 space-y-3">
                         <router-link :to="{ name: 'create-project' }" class="mobile-menu-link">
-                            Add Project
+                            Create Project
                         </router-link>
                         <router-link :to="{ name: 'create-task' }" class="mobile-menu-link">
-                            Add Task
+                            Create Task
                         </router-link>
                         <button @click="$emit('logout')" class="mobile-menu-link">
                             {{ logoutLoading ? 'Logging out...' : 'Logout' }}

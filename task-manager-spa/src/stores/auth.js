@@ -22,9 +22,9 @@ export const useAuthStore = defineStore('auth', () => {
         router.push({ name: 'dashboard' })
     }
 
-    async function login(email, password) {
+    async function login(email, password, remember) {
         await api.get('/sanctum/csrf-cookie')
-        const response = await api.post('/api/login', { email, password })
+        const response = await api.post('/api/login', { email, password, remember })
         user.value = response.data.data
         initialized.value = true
         await router.push({ name: 'dashboard' })

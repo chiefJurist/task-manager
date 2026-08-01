@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import DropDownIcon from '@/components/Icons/DropDownIcon.vue'
 import DropUpIcon from '@/components/Icons/DropUpIcon.vue'
+import EditIcon from '../Icons/EditIcon.vue'
+import DeleteIcon from '../Icons/DeleteIcon.vue'
 
 defineProps(['hasProjects', 'projects'])
 
@@ -67,19 +69,39 @@ function toggeleOpenProject(id) {
                                     {{ task.name }}
                                 </div>
                             </div>
+
                             <div v-else class="px-4 pb-3 text-sm text-emerald-400 italic">
                                 No tasks yet
                             </div>
 
-                            <!--delete project-->
-                            <form>
-                                <button
-                                    type="submit"
-                                    class="block p-2 mx-auto rounded-lg text-white my-3 bg-red-600 hover:bg-red-400 font-semibold cursor-pointer"
+                            <!--edit and delete project-->
+                            <div class="flex justify-between items-center m-4 flex-wrap gap-2">
+                                <router-link
+                                    :to="{ name: 'edit-project' }"
+                                    class="view-btn brand-transition"
                                 >
-                                    Delete Project
-                                </button>
-                            </form>
+                                    <span><EditIcon class="text-white" /></span>
+                                    <span>Edit Project</span>
+                                </router-link>
+
+                                <form>
+                                    <button
+                                        :class="
+                                            false
+                                                ? 'deleting-btn'
+                                                : 'before-delete-btn brand-transition'
+                                        "
+                                    >
+                                        <span v-if="true">
+                                            <DeleteIcon class="text-white" />
+                                        </span>
+                                        <span v-if="false">
+                                            <LoadingIcon class="text-white" />
+                                        </span>
+                                        <span> {{ false ? 'Deleting...' : 'Delete Task' }} </span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </transition>
                 </div>
