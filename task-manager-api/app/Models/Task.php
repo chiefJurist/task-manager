@@ -13,6 +13,17 @@ class Task extends Model
     //
     use HasFactory;
     
+    protected static function booted(): void
+    {
+        static::creating(function (Task $task) {
+            if (is_null($task->priority)) {
+                $task->priority = static::where('user_id', $task->user_id)
+                ->lockForUpdate()
+                ->max('priority') + 1;
+            }
+        });
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

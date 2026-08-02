@@ -17,11 +17,7 @@ class UserSeeder extends Seeder
         //predictable user
         User::factory()
             ->hasProjects(3)
-            ->has(
-                Task::factory()
-                ->count(5)
-                ->sequence(fn ($sequence) => ['priority' => $sequence->index + 1])
-            )
+            ->hasTasks(5)
             ->create([
                 'name' => 'Anthony Nnanna',
                 'email' => 'anthonynnanna@ct.com'
@@ -31,11 +27,7 @@ class UserSeeder extends Seeder
         User::factory()
             ->count(2)
             ->hasProjects(3)
-            ->has(
-                Task::factory()
-                ->count(5)
-                ->sequence(fn ($sequence) => ['priority' => $sequence->index + 1])
-            )
+            ->hasTasks(5)
             ->create();
     }
 }

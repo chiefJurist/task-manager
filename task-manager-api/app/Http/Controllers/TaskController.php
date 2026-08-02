@@ -18,27 +18,18 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Task::class);
-        $projectId = $request->query('project_id');
-        $projectId = $projectId !== null ? (int) $projectId : null;
-
-        $tasks = $request->user()->tasks()->where('project_id', $projectId)->orderBy('name')->get();
+        $tasks = $request->user()->tasks()->orderBy('priority')->get();
         
         return TaskResource::collection($tasks);
     }
 
-    public function store(StoreTaskRequest $request, Task $task)
+    public function store(StoreTaskRequest $request)
     {
         Gate::authorize('create', Task::class);
-        $projectId = $request->validated('project_id');
 
-        $nextPriority = $request->user()->tasks()
-            ->where('project_id', $projectId)
-            ->max('priority') + 1;
-
-        $task = $request->user()->tasks()->create([
-            ...$request->validated(),
-            'priority' => $nextPriority,
-        ]);
+        $task = DB::transaction(function () use ($request) {
+            $request->user()->tasks()->create([$request->validated()]);
+        });
 
         return new TaskResource($task);
     }
@@ -57,13 +48,11 @@ class TaskController extends Controller
 
         DB::transaction(function () use ($task) {
             $userId = $task->user_id;
-            $projectId = $task->project_id;
             $deletedPriority = $task->priority;
 
             $task->delete();
 
             Task::where('user_id', $userId)
-                ->where('project_id', $projectId)
                 ->where('priority', '>', $deletedPriority)
                 ->decrement('priority');
 
@@ -74,10 +63,8 @@ class TaskController extends Controller
     public function reorder(ReorderTaskRequest $request)
     {
         $taskIds = $request->validated('task_ids');
-        $projectId = $request->validated('project_id');
 
         $tasks = $request->user()->tasks()
-            ->where('project_id', $projectId)
             ->whereIn('id', $taskIds)
             ->get()
             ->keyBy('id');

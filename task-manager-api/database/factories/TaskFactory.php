@@ -18,10 +18,9 @@ class TaskFactory extends Factory
     public function definition(): array
     {
         return [
-            //
             'name' => $this->faker->sentence,
             'project_id' => null,
-            'priority' => 1,
+            'priority' => null,
         ];
     }
 }

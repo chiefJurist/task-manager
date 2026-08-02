@@ -28,10 +28,9 @@ class ProjectFactory extends Factory
     {
         return $this->afterCreating(function (Project $project) {
             Task::factory()
-                ->count(4)
+                ->count(5)
                 ->for($project->user)
                 ->for($project)
-                ->sequence(fn ($sequence) => ['priority' => $sequence->index + 1])
                 ->create();
         });
     }

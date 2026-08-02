@@ -7,7 +7,7 @@ defineProps(['hasTasks', 'tasks'])
 
 <template>
     <!-- tasks display-->
-    <section v-if="hasTasks" class="pb-20 px-6 lg:px-8">
+    <section v-if="hasTasks" class="p-20 px-6 lg:px-8">
         <div class="p-5 mx-auto max-w-3xl bg-white border border-slate-200 shadow rounded-xl">
             <div class="font-bold text-center text-3xl py-5">
                 <span class="text-emerald-600">TASK </span>
