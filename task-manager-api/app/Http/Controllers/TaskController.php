@@ -31,13 +31,20 @@ class TaskController extends Controller
             $request->user()->tasks()->create([$request->validated()]);
         });
 
-        return new TaskResource($task);
+        return response()->json(['message' => 'Task Created Successfully']);
     }
 
     public function update(UpdateTaskRequest $request, Task $task)
     {
         Gate::authorize('update', $task);
         $task->update($request->validated());
+
+       return response()->json(['message' => 'Task Updated Successfully']);
+    }
+
+    public function show(Task $task)
+    {
+        Gate::authorize('view', $task);
 
         return new TaskResource($task);
     }
@@ -56,7 +63,7 @@ class TaskController extends Controller
                 ->where('priority', '>', $deletedPriority)
                 ->decrement('priority');
 
-            return response()->json(['message' => 'Task deleted successfully.'], 200);
+            return response()->json(['message' => 'Task Deleted Successfully.'], 200);
         });
     }
     

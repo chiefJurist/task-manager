@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\TaskStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,9 +17,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate();
             $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->unsignedInteger('priority')->default(1);
-            $table->boolean('status')->nullable()->default(false);
+            $table->unsignedInteger('priority');
+            $table->enum('status', TaskStatus::cases())->default(TaskStatus::Uncompleted);
             $table->timestamps();
+
+            $table->unique(['user_id', 'priority']);
         });
     }
 

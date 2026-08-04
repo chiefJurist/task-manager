@@ -12,7 +12,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
 
-    Route::apiResource('projects', ProjectController::class)->only(['index', 'store']);
-    Route::apiResource('tasks', TaskController::class)->except(['show']);
+    Route::apiResource('projects', ProjectController::class)->except(['show']);
+    Route::apiResource('tasks', TaskController::class);
     Route::post('/tasks/reorder', [TaskController::class, 'reorder']);
 });

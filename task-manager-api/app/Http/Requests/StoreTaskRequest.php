@@ -24,9 +24,9 @@ class StoreTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'project_id' => ['nullable', 'exists:projects,id'],
-            'status' => ['nullable', 'boolean']
+            'name' => 'required|string|max:255',
+            'project_id' => 'nullable|exists:projects,id',
+            'status' => 'required|string|in:completed,uncompleted'
         ];
     }
 }
