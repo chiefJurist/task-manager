@@ -38,7 +38,9 @@ class AuthController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        if (!Auth::attempt($credentials, true)) {
+        $remember = $request->boolean('remember');
+
+        if (!Auth::attempt($credentials, $remember)) {
             throw ValidationException::withMessages([
                 'invalid' => __('auth.failed'),
             ]);
