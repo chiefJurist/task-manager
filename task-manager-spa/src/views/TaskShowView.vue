@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -13,9 +13,25 @@ const auth = useAuthStore()
 
 const { task } = storeToRefs(auth)
 
+const loadingMark = ref(false)
+const status = ref('')
+
 onMounted(async () => {
     await auth.fetchTask(route.params.id)
+    status.value = task.value.status
 })
+
+async function toggleStatus() {
+    loadingMark.value = true
+    if (status.value == 'completed') {
+        status.value = 'uncompleted'
+    } else {
+        status.value = 'completed'
+    }
+    await auth.editTask(task.value.id, task.value.name, task.value.project_id, status.value)
+    await auth.fetchTask(task.value.id)
+    loadingMark.value = false
+}
 </script>
 <template>
     <section class="view-section">
@@ -86,16 +102,29 @@ onMounted(async () => {
             </div>
 
             <div class="flex justify-between items-center flex-wrap gap-3 my-10">
-                <button
-                    :class="
-                        false ? 'form-loading' : 'form-before-loading brand-transition view-btn'
-                    "
-                >
-                    <span v-if="false">
-                        <LoadingIcon />
-                    </span>
-                    <span> {{ false ? 'Marking...' : ' Mark as completed' }} </span>
-                </button>
+                <form @submit.prevent="toggleStatus">
+                    <button
+                        type="submit"
+                        :class="
+                            loadingMark
+                                ? 'form-loading'
+                                : 'form-before-loading brand-transition view-btn'
+                        "
+                    >
+                        <span v-if="loadingMark">
+                            <LoadingIcon />
+                        </span>
+                        <span>
+                            {{
+                                loadingMark
+                                    ? 'Marking...'
+                                    : task.status == 'completed'
+                                      ? ' Mark as Uncompleted'
+                                      : 'Mark as Completed'
+                            }}
+                        </span>
+                    </button>
+                </form>
 
                 <button :class="false ? 'deleting-btn' : 'before-delete-btn brand-transition'">
                     <span v-if="true">

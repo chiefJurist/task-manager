@@ -63,8 +63,8 @@ export const useAuthStore = defineStore('auth', () => {
         task.value = response.data.data
     }
 
-    async function editTask(id, name, project_id) {
-        const response = await api.put(`/api/tasks/${id}`, { name, project_id })
+    async function editTask(id, name, project_id, status) {
+        const response = await api.put(`/api/tasks/${id}`, { name, project_id, status })
         task.value = response.data.data
     }
 

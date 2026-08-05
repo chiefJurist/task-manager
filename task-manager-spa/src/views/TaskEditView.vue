@@ -28,7 +28,7 @@ async function handleSubmit() {
     loading.value = true
 
     try {
-        await auth.editTask(task.value.id, name.value, projectId.value)
+        await auth.editTask(task.value.id, name.value, projectId.value, task.value.status)
     } catch (error) {
         errorMessage.value = error?.response?.data?.errors ?? {}
     } finally {
