@@ -7,6 +7,7 @@ import BackIcon from '@/components/Icons/BackIcon.vue'
 import DeleteIcon from '@/components/Icons/DeleteIcon.vue'
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
+import router from '@/router/index'
 
 const route = useRoute()
 const auth = useAuthStore()
@@ -14,6 +15,7 @@ const auth = useAuthStore()
 const { task } = storeToRefs(auth)
 
 const loadingMark = ref(false)
+const loadingDelete = ref(false)
 const status = ref('')
 
 onMounted(async () => {
@@ -22,15 +24,28 @@ onMounted(async () => {
 })
 
 async function toggleStatus() {
-    loadingMark.value = true
-    if (status.value == 'completed') {
-        status.value = 'uncompleted'
-    } else {
-        status.value = 'completed'
+    try {
+        loadingMark.value = true
+        if (status.value == 'completed') {
+            status.value = 'uncompleted'
+        } else {
+            status.value = 'completed'
+        }
+        await auth.editTask(task.value.id, task.value.name, task.value.project_id, status.value)
+        await auth.fetchTask(task.value.id)
+    } finally {
+        loadingMark.value = false
     }
-    await auth.editTask(task.value.id, task.value.name, task.value.project_id, status.value)
-    await auth.fetchTask(task.value.id)
-    loadingMark.value = false
+}
+
+async function deleteTask() {
+    try {
+        loadingDelete.value = true
+        await auth.deleteTask(task.value.id)
+        await router.push({ name: 'dashboard' })
+    } finally {
+        loadingDelete.value = false
+    }
 }
 </script>
 <template>
@@ -126,15 +141,22 @@ async function toggleStatus() {
                     </button>
                 </form>
 
-                <button :class="false ? 'deleting-btn' : 'before-delete-btn brand-transition'">
-                    <span v-if="true">
-                        <DeleteIcon class="text-white" />
-                    </span>
-                    <span v-if="false">
-                        <LoadingIcon class="text-white" />
-                    </span>
-                    <span> {{ false ? 'Deleting...' : 'Delete Task' }} </span>
-                </button>
+                <form @submit.prevent="deleteTask">
+                    <button
+                        type="submit"
+                        :class="
+                            loadingDelete ? 'deleting-btn' : 'before-delete-btn brand-transition'
+                        "
+                    >
+                        <span v-if="!loadingDelete">
+                            <DeleteIcon class="text-white" />
+                        </span>
+                        <span v-if="loadingDelete">
+                            <LoadingIcon class="text-white" />
+                        </span>
+                        <span> {{ loadingDelete ? 'Deleting...' : 'Delete Task' }} </span>
+                    </button>
+                </form>
             </div>
         </div>
     </section>

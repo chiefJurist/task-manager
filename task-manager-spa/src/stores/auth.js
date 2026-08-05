@@ -9,6 +9,7 @@ export const useAuthStore = defineStore('auth', () => {
     const tasks = ref([])
     const task = ref(null)
     const initialized = ref(false)
+    const toastMessage = ref('')
 
     async function register(name, email, password, password_confirmation) {
         await api.get('/sanctum/csrf-cookie')
@@ -68,12 +69,19 @@ export const useAuthStore = defineStore('auth', () => {
         task.value = response.data.data
     }
 
+    async function deleteTask(id) {
+        const response = await api.delete(`/api/tasks/${id}`)
+        await fetchTasks()
+        toastMessage.value = response.data
+    }
+
     return {
         user,
         initialized,
         projects,
         tasks,
         task,
+        toastMessage,
         register,
         login,
         logout,
@@ -82,5 +90,6 @@ export const useAuthStore = defineStore('auth', () => {
         fetchTasks,
         fetchTask,
         editTask,
+        deleteTask,
     }
 })
