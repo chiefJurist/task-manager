@@ -14,9 +14,7 @@ const auth = useAuthStore()
 const { task } = storeToRefs(auth)
 
 onMounted(async () => {
-    if (!task.value || task.value.id != route.params.id) {
-        await auth.fetchTask(route.params.id)
-    }
+    await auth.fetchTask(route.params.id)
 })
 </script>
 <template>

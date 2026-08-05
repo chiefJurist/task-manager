@@ -3,13 +3,13 @@ import BackIcon from '@/components/Icons/BackIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
-import { onMounted, watch } from 'vue'
+import { onMounted } from 'vue'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 const auth = useAuthStore()
-const { task, projects } = storeToRefs(auth)
 const route = useRoute()
+const { task, projects } = storeToRefs(auth)
 
 const name = ref('')
 const projectId = ref(null)
@@ -17,25 +17,11 @@ const loading = ref(false)
 const errorMessage = ref({})
 
 onMounted(async () => {
-    if (!task.value || task.value.id != route.params.id) {
-        await auth.fetchTask(route.params.id)
-    }
-
-    if (!projects.value.length) {
-        await auth.fetchProjects()
-    }
+    await auth.fetchTask(route.params.id)
+    await auth.fetchProjects()
+    name.value = task.value.name
+    projectId.value = task.value.project_id
 })
-
-watch(
-    task,
-    (newTask) => {
-        if (newTask) {
-            name.value = newTask.name
-            projectId.value = newTask.project_id
-        }
-    },
-    { immediate: true },
-)
 
 async function handleSubmit() {
     errorMessage.value = {}
@@ -47,6 +33,8 @@ async function handleSubmit() {
         errorMessage.value = error?.response?.data?.errors ?? {}
     } finally {
         loading.value = false
+        auth.fetchTask(task.value.id)
+        auth.fetchProjects()
     }
 }
 
@@ -58,7 +46,7 @@ const availableProjects = computed(() => {
     <section class="min-h-screen bg-slate-50 py-20 px-4">
         <form
             @submit.prevent="handleSubmit"
-            v-if="task"
+            v-if="task && projects.length"
             class="bg-white border border-slate-100 shadow rounded-lg p-6 max-w-3xl mx-auto"
         >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
