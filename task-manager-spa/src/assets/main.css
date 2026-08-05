@@ -38,7 +38,13 @@
     @apply text-2xl font-bold text-center mt-10;
 }
 .show-task-paragraph {
-    @apply mt-5 w-fit py-3 px-6 rounded-lg mx-auto bg-emerald-50 border-2 border-emerald-600 font-medium;
+    @apply w-fit py-3 px-6 rounded-lg mx-auto bg-emerald-50 border-2 border-emerald-600 font-medium;
+}
+.show-task-paragrapgh-label {
+    @apply text-emerald-600 font-bold block;
+}
+.show-incomplete-task-paragraph {
+    @apply w-fit py-3 px-6 rounded-lg mx-auto bg-yellow-50 border-2 border-yellow-500 font-medium capitalize;
 }
 .view-btn {
     @apply cursor-pointer flex items-center gap-2 text-white p-3 rounded-lg font-medium bg-emerald-600 hover:bg-emerald-400;

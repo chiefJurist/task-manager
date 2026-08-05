@@ -38,13 +38,15 @@ class TaskController extends Controller
     {
         Gate::authorize('update', $task);
         $task->update($request->validated());
+        $task->load('project');
 
-       return response()->json(['message' => 'Task Updated Successfully']);
+        return new TaskResource($task);
     }
 
     public function show(Task $task)
     {
         Gate::authorize('view', $task);
+        $task->load('project');
 
         return new TaskResource($task);
     }

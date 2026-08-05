@@ -21,6 +21,7 @@ class TaskFactory extends Factory
             'name' => $this->faker->sentence,
             'project_id' => null,
             'priority' => null,
+            'status' => $this->faker->randomElement(['completed', 'uncompleted']),
         ];
     }
 }

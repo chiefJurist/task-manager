@@ -36,7 +36,7 @@ async function logout() {
 
 onMounted(async () => {
     try {
-        await Promise.all([auth.fetchProjects(), auth.fetchTasks()])
+        await Promise.all([auth.fetchTasks(), auth.fetchProjects()])
     } finally {
         loadingDashboard.value = false
     }
@@ -54,8 +54,8 @@ onMounted(async () => {
 
         <EmptySection :loading-dashboard="loadingDashboard" :has-nothing="hasNothing" />
 
-        <ProjectsSection :has-projects="hasProjects" :projects="projects" />
-
         <TaskSection :has-tasks="hasTasks" :tasks="tasks" />
+
+        <ProjectsSection :has-projects="hasProjects" :projects="projects" />
     </div>
 </template>

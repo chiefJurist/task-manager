@@ -35,25 +35,25 @@ const router = createRouter({
             meta: { requiresAuth: true },
         },
         {
-            path: '/create-task',
-            name: 'create-task',
-            component: () => import('../views/TaskCreateView.vue'),
-            meta: { requiresAuth: true },
-        },
-        {
-            path: '/task/',
-            name: 'show-task',
-            component: () => import('../views/TaskShowView.vue'),
-            meta: { requiresAuth: true },
-        },
-        {
             path: '/project-edit/',
             name: 'edit-project',
             component: () => import('../views/ProjectEditView.vue'),
             meta: { requiresAuth: true },
         },
         {
-            path: '/task-edit/',
+            path: '/create-task',
+            name: 'create-task',
+            component: () => import('../views/TaskCreateView.vue'),
+            meta: { requiresAuth: true },
+        },
+        {
+            path: '/task/:id',
+            name: 'show-task',
+            component: () => import('../views/TaskShowView.vue'),
+            meta: { requiresAuth: true },
+        },
+        {
+            path: '/task-edit/:id',
             name: 'edit-task',
             component: () => import('../views/TaskEditView.vue'),
             meta: { requiresAuth: true },

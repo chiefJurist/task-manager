@@ -23,6 +23,7 @@ class TaskResource extends JsonResource
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'project' => new ProjectResource($this->whenLoaded('project')),
         ];
     }
 }

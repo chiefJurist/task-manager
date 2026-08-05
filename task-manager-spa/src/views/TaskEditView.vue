@@ -1,9 +1,66 @@
 <script setup>
 import BackIcon from '@/components/Icons/BackIcon.vue'
+import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
+import { onMounted, watch } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const auth = useAuthStore()
+const { task, projects } = storeToRefs(auth)
+const route = useRoute()
+
+const name = ref('')
+const projectId = ref(null)
+const loading = ref(false)
+const errorMessage = ref({})
+
+onMounted(async () => {
+    if (!task.value || task.value.id != route.params.id) {
+        await auth.fetchTask(route.params.id)
+    }
+
+    if (!projects.value.length) {
+        await auth.fetchProjects()
+    }
+})
+
+watch(
+    task,
+    (newTask) => {
+        if (newTask) {
+            name.value = newTask.name
+            projectId.value = newTask.project_id
+        }
+    },
+    { immediate: true },
+)
+
+async function handleSubmit() {
+    errorMessage.value = {}
+    loading.value = true
+
+    try {
+        await auth.editTask(task.value.id, name.value, projectId.value)
+    } catch (error) {
+        errorMessage.value = error?.response?.data?.errors ?? {}
+    } finally {
+        loading.value = false
+    }
+}
+
+const availableProjects = computed(() => {
+    return projects.value.filter((project) => project.id !== task.value.project_id)
+})
 </script>
 <template>
     <section class="min-h-screen bg-slate-50 py-20 px-4">
-        <div class="bg-white border border-slate-100 shadow rounded-lg p-6 max-w-3xl mx-auto">
+        <form
+            @submit.prevent="handleSubmit"
+            v-if="task"
+            class="bg-white border border-slate-100 shadow rounded-lg p-6 max-w-3xl mx-auto"
+        >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span><BackIcon /></span>
                 <span>Back to Dashboard</span>
@@ -16,41 +73,43 @@ import BackIcon from '@/components/Icons/BackIcon.vue'
 
             <div class="mt-10">
                 <label class="form-label">Task Name</label>
-                <input type="text" class="form-input" />
+                <input type="text" class="form-input" v-model="name" />
+                <p v-if="errorMessage.name" class="form-error">
+                    {{ errorMessage.name[0] }}
+                </p>
             </div>
 
             <div class="mt-10">
                 <h2 class="text-xl font-semibold text-center">CHANGE TASK'S PROJECT</h2>
                 <div class="mt-5">
-                    <select class="form-input">
-                        <option value="Lorem ipsum dolor sit amet.">
-                            Lorem ipsum dolor sit amet.
-                        </option>
-                        <option value="Lorem ipsum dolor sit amet.">
-                            Lorem ipsum dolor sit amet.
-                        </option>
-                        <option value="Lorem ipsum dolor sit amet.">
-                            Lorem ipsum dolor sit amet.
-                        </option>
-                        <option value="Lorem ipsum dolor sit amet.">
-                            Lorem ipsum dolor sit amet.
+                    <select class="form-input" v-model="projectId">
+                        <option :value="task.project_id">{{ task.project.name }}</option>
+                        <option
+                            v-for="project in availableProjects"
+                            :key="project.id"
+                            :value="project.id"
+                        >
+                            {{ project.name }}
                         </option>
                     </select>
+                    <p v-if="errorMessage.project_id" class="form-error">
+                        {{ errorMessage.project_id[0] }}
+                    </p>
                 </div>
             </div>
 
             <div class="my-10 flex justify-center">
                 <button
                     type="submit"
-                    :class="false ? 'form-loading' : 'form-before-loading brand-transition'"
+                    :class="loading ? 'form-loading' : 'form-before-loading brand-transition'"
                 >
-                    <span v-if="false">
+                    <span v-if="loading">
                         <LoadingIcon />
                     </span>
 
-                    <span>{{ false ? 'Saving...' : 'Save Task' }}</span>
+                    <span v-if="!loading">Save Task</span>
                 </button>
             </div>
-        </div>
+        </form>
     </section>
 </template>

@@ -4,6 +4,7 @@ import DropDownIcon from '@/components/Icons/DropDownIcon.vue'
 import DropUpIcon from '@/components/Icons/DropUpIcon.vue'
 import EditIcon from '../Icons/EditIcon.vue'
 import DeleteIcon from '../Icons/DeleteIcon.vue'
+import LoadingIcon from '../Icons/LoadingIcon.vue'
 
 defineProps(['hasProjects', 'projects'])
 
@@ -20,7 +21,7 @@ function toggeleOpenProject(id) {
 
 <template>
     <!-- projects dsplay -->
-    <section v-if="hasProjects" class="pt-32 px-6 lg:px-8">
+    <section v-if="hasProjects" class="pt-20 px-6 lg:px-8">
         <div class="p-5 mx-auto max-w-3xl bg-white border border-slate-200 shadow rounded-xl">
             <div class="font-bold text-center text-3xl py-5">
                 <span class="text-emerald-600">PROJECT </span>

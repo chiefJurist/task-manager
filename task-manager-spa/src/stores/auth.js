@@ -7,6 +7,7 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
     const projects = ref([])
     const tasks = ref([])
+    const task = ref(null)
     const initialized = ref(false)
 
     async function register(name, email, password, password_confirmation) {
@@ -57,16 +58,29 @@ export const useAuthStore = defineStore('auth', () => {
         tasks.value = response.data.data
     }
 
+    async function fetchTask(id) {
+        const response = await api.get(`/api/tasks/${id}`)
+        task.value = response.data.data
+    }
+
+    async function editTask(id, name, project_id) {
+        const response = await api.put(`/api/tasks/${id}`, { name, project_id })
+        task.value = response.data.data
+    }
+
     return {
         user,
         initialized,
         projects,
         tasks,
+        task,
         register,
         login,
         logout,
         fetchUser,
         fetchProjects,
         fetchTasks,
+        fetchTask,
+        editTask,
     }
 })
