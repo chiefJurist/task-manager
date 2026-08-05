@@ -20,7 +20,11 @@ defineProps(['hasTasks', 'tasks'])
                     :to="{ name: 'show-task', params: { id: task.id } }"
                     v-for="task in tasks"
                     :key="task.id"
-                    class="border border-slate-700 hover:bg-slate-50 rounded p-3 my-5 overflow-hidden flex items-center justify-between cursor-pointer"
+                    :class="
+                        task.status == 'completed'
+                            ? 'completed-status-list'
+                            : 'uncompleted-status-list'
+                    "
                 >
                     <div class="flex items-center gap-2">
                         <DragDropIcon />

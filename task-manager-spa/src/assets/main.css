@@ -37,6 +37,12 @@
 .view-header {
     @apply text-2xl font-bold text-center mt-10;
 }
+.completed-status-list {
+    @apply border border-slate-700 bg-emerald-50 hover:bg-emerald-100 rounded p-3 my-5 overflow-hidden flex items-center justify-between cursor-pointer;
+}
+.uncompleted-status-list {
+    @apply border border-slate-700 bg-yellow-50 hover:bg-yellow-100 rounded p-3 my-5 overflow-hidden flex items-center justify-between cursor-pointer;
+}
 .show-task-paragraph {
     @apply w-fit py-3 px-6 rounded-lg mx-auto bg-emerald-50 border-2 border-emerald-600 font-medium;
 }
