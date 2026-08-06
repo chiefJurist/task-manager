@@ -196,6 +196,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'project_id' => 'project',
+    ],
 
 ];

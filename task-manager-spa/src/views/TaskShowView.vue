@@ -42,7 +42,7 @@ async function deleteTask() {
     try {
         loadingDelete.value = true
         await auth.deleteTask(task.value.id)
-        await router.push({ name: 'dashboard' })
+        router.push({ name: 'dashboard' })
     } finally {
         loadingDelete.value = false
     }

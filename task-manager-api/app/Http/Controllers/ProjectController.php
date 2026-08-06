@@ -23,7 +23,7 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         Gate::authorize('create', Project::class);
-        $project = $request->user()->projects()->create($request->validated());
+        $request->user()->projects()->create($request->validated());
         
         return response()->json(['message' => 'Project Created Successfully']);
     }

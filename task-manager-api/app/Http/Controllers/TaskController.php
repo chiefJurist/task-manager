@@ -27,8 +27,8 @@ class TaskController extends Controller
     {
         Gate::authorize('create', Task::class);
 
-        $task = DB::transaction(function () use ($request) {
-            $request->user()->tasks()->create([$request->validated()]);
+        DB::transaction(function () use ($request) {
+            $request->user()->tasks()->create($request->validated());
         });
 
         return response()->json(['message' => 'Task Created Successfully']);

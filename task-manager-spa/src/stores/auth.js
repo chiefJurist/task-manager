@@ -64,6 +64,12 @@ export const useAuthStore = defineStore('auth', () => {
         task.value = response.data.data
     }
 
+    async function createTask(name, project_id) {
+        const response = await api.post(`/api/tasks/`, { name, project_id })
+        await fetchTasks()
+        toastMessage.value = response.data.message
+    }
+
     async function editTask(id, name, project_id, status) {
         const response = await api.put(`/api/tasks/${id}`, { name, project_id, status })
         task.value = response.data.data
@@ -72,7 +78,7 @@ export const useAuthStore = defineStore('auth', () => {
     async function deleteTask(id) {
         const response = await api.delete(`/api/tasks/${id}`)
         await fetchTasks()
-        toastMessage.value = response.data
+        toastMessage.value = response.data.message
     }
 
     return {
@@ -89,6 +95,7 @@ export const useAuthStore = defineStore('auth', () => {
         fetchProjects,
         fetchTasks,
         fetchTask,
+        createTask,
         editTask,
         deleteTask,
     }
