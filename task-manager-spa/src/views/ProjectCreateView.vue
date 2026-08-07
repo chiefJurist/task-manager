@@ -34,7 +34,7 @@ import { RouterLink } from 'vue-router'
                         <LoadingIcon />
                     </span>
 
-                    <span>{{ false ? 'Creating...' : 'Create Task' }}</span>
+                    <span>{{ false ? 'Creating...' : 'Create Project' }}</span>
                 </button>
             </div>
         </form>

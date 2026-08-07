@@ -10,16 +10,23 @@ const email = ref('')
 const password = ref('')
 const remember = ref(false)
 const errorMessage = ref({})
+const errorDisplay = ref('')
 const loading = ref(false)
 
 async function handleSubmit() {
-    errorMessage.value = ''
+    errorMessage.value = {}
+    errorDisplay.value = ''
     loading.value = true
 
     try {
         await auth.login(email.value, password.value, remember.value)
     } catch (error) {
-        errorMessage.value = error.response.data.errors ?? {}
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            errorDisplay.value =
+                error.response?.data?.message ?? 'Check your internet connection and try again.'
+        }
     } finally {
         loading.value = false
     }
@@ -64,6 +71,9 @@ async function handleSubmit() {
 
             <p v-if="errorMessage.invalid" class="font-medium text-center text-red-600 mt-1">
                 {{ errorMessage.invalid[0] }}
+            </p>
+            <p v-if="errorDisplay" class="font-medium text-center text-red-600 mt-1">
+                {{ errorDisplay }}
             </p>
 
             <div class="mt-5 flex items-center gap-2 flex-wrap">

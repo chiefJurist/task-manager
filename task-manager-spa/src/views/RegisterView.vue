@@ -10,16 +10,23 @@ const email = ref('')
 const password = ref('')
 const password_confirmation = ref('')
 const errorMessage = ref({})
+const errorDisplay = ref('')
 const loading = ref(false)
 
 async function handleSubmit() {
-    errorMessage.value = ''
+    errorMessage.value = {}
+    errorDisplay.value = ''
     loading.value = true
 
     try {
         await auth.register(name.value, email.value, password.value, password_confirmation.value)
     } catch (error) {
-        errorMessage.value = error.response.data.errors ?? {}
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            errorDisplay.value =
+                error.response?.data?.message ?? 'Check your internet connection and try again.'
+        }
     } finally {
         loading.value = false
     }
@@ -34,6 +41,13 @@ async function handleSubmit() {
                 <span class="text-emerald-600">TASK MANAGER </span>
                 <span>ACCOUNT</span>
             </h1>
+
+            <p
+                v-if="errorDisplay"
+                class="mt-5 text-lg text-red-600 font-semibold capitalize text-center"
+            >
+                {{ errorDisplay }}
+            </p>
 
             <div class="mt-10">
                 <label class="form-label">Full Name</label>
