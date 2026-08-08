@@ -7,7 +7,6 @@ export const useAuthStore = defineStore('auth', () => {
     const user = ref(null)
     const projects = ref([])
     const tasks = ref([])
-    const task = ref(null)
     const initialized = ref(false)
     const toastMessage = ref('')
 
@@ -55,13 +54,13 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function fetchTasks() {
-        const response = await api.get('/api/tasks')
-        tasks.value = response.data.data
-    }
-
-    async function fetchTask(id) {
-        const response = await api.get(`/api/tasks/${id}`)
-        task.value = response.data.data
+        try {
+            const response = await api.get('/api/tasks')
+            tasks.value = response.data.data
+        } catch (error) {
+            toastMessage.value =
+                error.response?.data?.message ?? 'Check Internet Connection and Try Again'
+        }
     }
 
     async function createTask(name, project_id) {
@@ -71,14 +70,27 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function editTask(id, name, project_id, status) {
-        const response = await api.put(`/api/tasks/${id}`, { name, project_id, status })
-        task.value = response.data.data
+        try {
+            const response = await api.put(`/api/tasks/${id}`, { name, project_id, status })
+            const updatedTask = response.data.data
+            const index = tasks.value.findIndex((t) => t.id === id)
+            tasks.value[index] = updatedTask
+            toastMessage.value = 'Task updated successfully'
+        } catch (error) {
+            toastMessage.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
     }
 
     async function deleteTask(id) {
-        const response = await api.delete(`/api/tasks/${id}`)
-        await fetchTasks()
-        toastMessage.value = response.data.message
+        try {
+            const response = await api.delete(`/api/tasks/${id}`)
+            tasks.value = tasks.value.filter((t) => t.id !== id)
+            toastMessage.value = response.data.message
+        } catch (error) {
+            toastMessage.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
     }
 
     return {
@@ -86,7 +98,6 @@ export const useAuthStore = defineStore('auth', () => {
         initialized,
         projects,
         tasks,
-        task,
         toastMessage,
         register,
         login,
@@ -94,7 +105,6 @@ export const useAuthStore = defineStore('auth', () => {
         fetchUser,
         fetchProjects,
         fetchTasks,
-        fetchTask,
         createTask,
         editTask,
         deleteTask,

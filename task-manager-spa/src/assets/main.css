@@ -19,6 +19,9 @@
 .form-error {
     @apply text-sm text-red-600 mt-1;
 }
+.response-message-display {
+    @apply mt-5 text-lg text-red-600 font-semibold capitalize text-center;
+}
 .form-loading {
     @apply bg-emerald-400 flex items-center gap-1 cursor-not-allowed px-6 py-3 text-white font-semibold rounded-lg;
 }

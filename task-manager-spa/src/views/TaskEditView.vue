@@ -1,6 +1,7 @@
 <script setup>
 import BackIcon from '@/components/Icons/BackIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
+import LoadingModal from '@/components/Modals/LoadingModal.vue'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
@@ -13,28 +14,42 @@ const { task, projects } = storeToRefs(auth)
 
 const name = ref('')
 const projectId = ref(null)
-const loading = ref(false)
+const loadingSubmit = ref(false)
 const errorMessage = ref({})
+const display = ref('')
 
 onMounted(async () => {
-    await auth.fetchTask(route.params.id)
-    await auth.fetchProjects()
-    name.value = task.value.name
-    projectId.value = task.value.project_id
+    try {
+        await auth.fetchTask(route.params.id)
+        await auth.fetchProjects()
+        name.value = task.value.name
+        projectId.value = task.value.project_id
+    } catch (error) {
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            display.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
+    }
 })
 
 async function handleSubmit() {
     errorMessage.value = {}
-    loading.value = true
+    display.value = ''
+    loadingSubmit.value = true
 
     try {
         await auth.editTask(task.value.id, name.value, projectId.value, task.value.status)
     } catch (error) {
-        errorMessage.value = error?.response?.data?.errors ?? {}
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            display.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
     } finally {
-        loading.value = false
-        auth.fetchTask(task.value.id)
-        auth.fetchProjects()
+        loadingSubmit.value = false
     }
 }
 
@@ -43,16 +58,22 @@ const availableProjects = computed(() => {
 })
 </script>
 <template>
-    <section class="min-h-screen bg-slate-50 py-20 px-4">
+    <section class="view-section">
+        <LoadingModal v-if="!name || !projectId || !availableProjects.length" />
+
         <form
             @submit.prevent="handleSubmit"
-            v-if="task && projects.length"
-            class="bg-white border border-slate-100 shadow rounded-lg p-6 max-w-3xl mx-auto"
+            v-if="name && projectId && availableProjects.length"
+            class="view-sub-section"
         >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span><BackIcon /></span>
                 <span>Back to Dashboard</span>
             </router-link>
+
+            <p v-if="display" class="response-message-display">
+                {{ display }}
+            </p>
 
             <div class="view-header">
                 <span>EDIT </span>
@@ -89,13 +110,13 @@ const availableProjects = computed(() => {
             <div class="my-10 flex justify-center">
                 <button
                     type="submit"
-                    :class="loading ? 'form-loading' : 'form-before-loading brand-transition'"
+                    :class="loadingSubmit ? 'form-loading' : 'form-before-loading brand-transition'"
                 >
-                    <span v-if="loading">
+                    <span v-if="loadingSubmit">
                         <LoadingIcon />
                     </span>
 
-                    <span v-if="!loading">Save Task</span>
+                    <span v-if="!loadingSubmit">Save Task</span>
                 </button>
             </div>
         </form>

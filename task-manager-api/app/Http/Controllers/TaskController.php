@@ -18,7 +18,7 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Task::class);
-        $tasks = $request->user()->tasks()->orderBy('priority')->get();
+        $tasks = $request->user()->tasks()->with('project')->orderBy('priority')->get();
         
         return TaskResource::collection($tasks);
     }

@@ -42,10 +42,7 @@ async function handleSubmit() {
                 <span>ACCOUNT</span>
             </h1>
 
-            <p
-                v-if="errorDisplay"
-                class="mt-5 text-lg text-red-600 font-semibold capitalize text-center"
-            >
+            <p v-if="errorDisplay" class="response-message-display">
                 {{ errorDisplay }}
             </p>
 

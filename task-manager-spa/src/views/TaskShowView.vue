@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useRoute } from 'vue-router'
 import { storeToRefs } from 'pinia'
@@ -8,31 +8,34 @@ import DeleteIcon from '@/components/Icons/DeleteIcon.vue'
 import EditIcon from '@/components/Icons/EditIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
 import router from '@/router/index'
+import LoadingModal from '@/components/Modals/LoadingModal.vue'
+import NotFound from '@/components/NotFound.vue'
 
 const route = useRoute()
 const auth = useAuthStore()
+const { tasks } = storeToRefs(auth)
 
-const { task } = storeToRefs(auth)
-
+const loading = ref(false)
 const loadingMark = ref(false)
 const loadingDelete = ref(false)
-const status = ref('')
+
+const task = computed(() => {
+    return tasks.value.find((task) => task.id == route.params.id)
+})
 
 onMounted(async () => {
-    await auth.fetchTask(route.params.id)
-    status.value = task.value.status
+    if (!task.value) {
+        loading.value = true
+        await auth.fetchTasks()
+        loading.value = false
+    }
 })
 
 async function toggleStatus() {
     try {
         loadingMark.value = true
-        if (status.value == 'completed') {
-            status.value = 'uncompleted'
-        } else {
-            status.value = 'completed'
-        }
-        await auth.editTask(task.value.id, task.value.name, task.value.project_id, status.value)
-        await auth.fetchTask(task.value.id)
+        const newStatus = task.value.status === 'completed' ? 'uncompleted' : 'completed'
+        await auth.editTask(task.value.id, task.value.name, task.value.project_id, newStatus)
     } finally {
         loadingMark.value = false
     }
@@ -48,9 +51,12 @@ async function deleteTask() {
     }
 }
 </script>
+
 <template>
     <section class="view-section">
-        <div v-if="task && task.id == route.params.id" class="view-sub-section">
+        <LoadingModal v-if="loading" />
+
+        <div v-else-if="task?.id == route.params.id" class="view-sub-section">
             <div class="flex justify-between items-center flex-wrap gap-3">
                 <router-link :to="{ name: 'dashboard' }" class="nav-link">
                     <span><BackIcon /></span>
@@ -159,5 +165,7 @@ async function deleteTask() {
                 </form>
             </div>
         </div>
+
+        <NotFound v-else>Task Not Found</NotFound>
     </section>
 </template>
