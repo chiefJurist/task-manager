@@ -10,7 +10,7 @@ import TaskSection from '@/components/Dashboard/TaskSection.vue'
 const auth = useAuthStore()
 const { user, tasks, projects } = storeToRefs(auth)
 const mobileMenuDisplay = ref(false)
-const loadingDashboard = ref(true)
+const loadingDashboard = ref(false)
 const logoutLoading = ref(false)
 
 const firstName = computed(() => {
@@ -36,7 +36,15 @@ async function logout() {
 
 onMounted(async () => {
     try {
-        await Promise.all([auth.fetchTasks(), auth.fetchProjects()])
+        if (!tasks.value.length) {
+            loadingDashboard.value = true
+            await auth.fetchTasks()
+        }
+
+        if (!projects.value.length) {
+            loadingDashboard.value = true
+            await auth.fetchProjects()
+        }
     } finally {
         loadingDashboard.value = false
     }

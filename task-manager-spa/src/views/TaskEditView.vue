@@ -13,12 +13,8 @@ const auth = useAuthStore()
 const route = useRoute()
 const { tasks, projects } = storeToRefs(auth)
 
-const name = ref('')
-const projectId = ref(null)
 const loading = ref(false)
 const loadingSubmit = ref(false)
-const errorMessage = ref({})
-const display = ref('')
 
 const task = computed(() => {
     return tasks.value.find((task) => task.id == route.params.id)
@@ -28,17 +24,16 @@ const availableProjects = computed(() => {
     return projects.value.filter((project) => project.id !== route.params.id)
 })
 
+const name = ref(task.value?.name ?? '')
+const projectId = ref(task.value?.project_id ?? null)
+const errorMessage = ref({})
+
 onMounted(async () => {
     try {
-        if (!task.value) {
+        if (!task.value || !availableProjects.value.length) {
             loading.value = true
             await auth.fetchTasks()
-        }
-        if (!availableProjects.value.length) {
-            loading.value = true
             await auth.fetchProjects()
-        }
-        if (task.value) {
             name.value = task.value.name
             projectId.value = task.value.project_id
         }
@@ -49,7 +44,6 @@ onMounted(async () => {
 
 async function handleSubmit() {
     errorMessage.value = {}
-    display.value = ''
     loadingSubmit.value = true
 
     try {
@@ -58,8 +52,9 @@ async function handleSubmit() {
         if (error.response?.status === 422) {
             errorMessage.value = error.response.data.errors ?? {}
         } else {
-            display.value =
-                error.response?.data?.message ?? 'Check internet connection and try again'
+            await auth.setToast(
+                error.response?.data?.message ?? 'Check internet connection and try again',
+            )
         }
     } finally {
         loadingSubmit.value = false
@@ -73,17 +68,13 @@ async function handleSubmit() {
 
         <form
             @submit.prevent="handleSubmit"
-            v-else-if="name && projectId && availableProjects.length"
+            v-else-if="task?.id == route.params.id"
             class="view-sub-section"
         >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span><BackIcon /></span>
                 <span>Back to Dashboard</span>
             </router-link>
-
-            <p v-if="display" class="response-message-display">
-                {{ display }}
-            </p>
 
             <div class="view-header">
                 <span>EDIT </span>
@@ -102,7 +93,9 @@ async function handleSubmit() {
                 <h2 class="text-xl font-semibold text-center">CHANGE TASK'S PROJECT</h2>
                 <div class="mt-5">
                     <select class="form-input" v-model="projectId">
-                        <option :value="task.project_id">{{ task.project.name }}</option>
+                        <option :value="task.project_id">
+                            {{ task.project?.name ?? 'No Attached Project' }}
+                        </option>
                         <option
                             v-for="project in availableProjects"
                             :key="project.id"

@@ -84,12 +84,13 @@ export const useAuthStore = defineStore('auth', () => {
         const updatedTask = response.data.data
         const index = tasks.value.findIndex((t) => t.id === id)
         tasks.value[index] = updatedTask
-        setToast('Task updated successfully')
+        setToast('Task Updated Successfully')
     }
 
     async function deleteTask(id) {
         const response = await api.delete(`/api/tasks/${id}`)
-        tasks.value = tasks.value.filter((t) => t.id !== id)
+        // tasks.value = tasks.value.filter((t) => t.id !== id)
+        await fetchTasks()
         setToast(response.data.message)
     }
 
@@ -100,6 +101,7 @@ export const useAuthStore = defineStore('auth', () => {
         tasks,
         toastMessage,
         errorMessage,
+        setToast,
         register,
         login,
         logout,
