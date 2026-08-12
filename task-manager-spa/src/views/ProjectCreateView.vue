@@ -1,10 +1,42 @@
 <script setup>
 import BackIcon from '@/components/Icons/BackIcon.vue'
+import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
+import router from '@/router/index'
+import { useAuthStore } from '@/stores/auth'
+import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+
+const auth = useAuthStore()
+
+const loading = ref(false)
+const errorMessage = ref({})
+
+const projectName = ref('')
+
+async function createProject() {
+    try {
+        loading.value = true
+        errorMessage.value = {}
+
+        await auth.createProject(projectName.value)
+        router.push({ name: 'dashboard' })
+    } catch (error) {
+        errorMessage.value = error?.response?.data?.errors ?? {}
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            await auth.setToast(
+                error.response?.data?.message ?? 'Check internet connection and try again',
+            )
+        }
+    } finally {
+        loading.value = false
+    }
+}
 </script>
 <template>
     <section class="view-section">
-        <form class="view-sub-section">
+        <form @submit.prevent="createProject" class="view-sub-section">
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span><BackIcon /></span>
                 <span>Back to Dashboard</span>
@@ -19,22 +51,23 @@ import { RouterLink } from 'vue-router'
                     required
                     placeholder="Input your project name"
                     class="form-input"
+                    v-model="projectName"
                 />
-                <!-- <p v-if="errorMessage.name" class="form-error">
+                <p v-if="errorMessage.name" class="form-error">
                     {{ errorMessage.name[0] }}
-                </p> -->
+                </p>
             </div>
 
             <div class="flex justify-center my-5">
                 <button
                     type="submit"
-                    :class="false ? 'form-loading' : 'form-before-loading brand-transition'"
+                    :class="loading ? 'form-loading' : 'form-before-loading brand-transition'"
                 >
-                    <span v-if="false">
+                    <span v-if="loading">
                         <LoadingIcon />
                     </span>
 
-                    <span>{{ false ? 'Creating...' : 'Create Project' }}</span>
+                    <span>{{ loading ? 'Creating...' : 'Create Project' }}</span>
                 </button>
             </div>
         </form>

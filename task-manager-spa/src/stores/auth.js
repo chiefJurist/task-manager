@@ -64,6 +64,12 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
+    async function createProject(name) {
+        const response = await api.post(`/api/projects/`, { name })
+        await fetchProjects()
+        setToast(response.data.message)
+    }
+
     async function fetchTasks() {
         try {
             const response = await api.get('/api/tasks')
@@ -107,6 +113,7 @@ export const useAuthStore = defineStore('auth', () => {
         logout,
         fetchUser,
         fetchProjects,
+        createProject,
         fetchTasks,
         createTask,
         editTask,

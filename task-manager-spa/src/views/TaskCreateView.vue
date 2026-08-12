@@ -10,10 +10,11 @@ import { RouterLink } from 'vue-router'
 const auth = useAuthStore()
 const { projects } = storeToRefs(auth)
 
+const loading = ref(false)
+const errorMessage = ref({})
+
 const taskName = ref('')
 const projectId = ref(null)
-const errorMessage = ref({})
-const loading = ref(false)
 
 onMounted(async () => {
     await auth.fetchProjects()
