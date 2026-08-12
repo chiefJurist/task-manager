@@ -13,20 +13,24 @@ import NotFound from '@/components/NotFound.vue'
 
 const route = useRoute()
 const auth = useAuthStore()
-const { tasks } = storeToRefs(auth)
+const { tasks, toastMessage } = storeToRefs(auth)
 
 const loading = ref(false)
 const loadingMark = ref(false)
 const loadingDelete = ref(false)
+const errorMessage = ref({})
 
 const task = computed(() => {
     return tasks.value.find((task) => task.id == route.params.id)
 })
 
 onMounted(async () => {
-    if (!task.value) {
-        loading.value = true
-        await auth.fetchTasks()
+    try {
+        if (!task.value) {
+            loading.value = true
+            await auth.fetchTasks()
+        }
+    } finally {
         loading.value = false
     }
 })
@@ -36,6 +40,13 @@ async function toggleStatus() {
         loadingMark.value = true
         const newStatus = task.value.status === 'completed' ? 'uncompleted' : 'completed'
         await auth.editTask(task.value.id, task.value.name, task.value.project_id, newStatus)
+    } catch (error) {
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            toastMessage.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
     } finally {
         loadingMark.value = false
     }
@@ -46,6 +57,13 @@ async function deleteTask() {
         loadingDelete.value = true
         await auth.deleteTask(task.value.id)
         router.push({ name: 'dashboard' })
+    } catch (error) {
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            toastMessage.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
     } finally {
         loadingDelete.value = false
     }

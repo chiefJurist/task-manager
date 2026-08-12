@@ -2,6 +2,7 @@
 import BackIcon from '@/components/Icons/BackIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
 import LoadingModal from '@/components/Modals/LoadingModal.vue'
+import NotFound from '@/components/NotFound.vue'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import { onMounted } from 'vue'
@@ -10,27 +11,39 @@ import { useRoute } from 'vue-router'
 
 const auth = useAuthStore()
 const route = useRoute()
-const { task, projects } = storeToRefs(auth)
+const { tasks, projects } = storeToRefs(auth)
 
 const name = ref('')
 const projectId = ref(null)
+const loading = ref(false)
 const loadingSubmit = ref(false)
 const errorMessage = ref({})
 const display = ref('')
 
+const task = computed(() => {
+    return tasks.value.find((task) => task.id == route.params.id)
+})
+
+const availableProjects = computed(() => {
+    return projects.value.filter((project) => project.id !== route.params.id)
+})
+
 onMounted(async () => {
     try {
-        await auth.fetchTask(route.params.id)
-        await auth.fetchProjects()
-        name.value = task.value.name
-        projectId.value = task.value.project_id
-    } catch (error) {
-        if (error.response?.status === 422) {
-            errorMessage.value = error.response.data.errors ?? {}
-        } else {
-            display.value =
-                error.response?.data?.message ?? 'Check internet connection and try again'
+        if (!task.value) {
+            loading.value = true
+            await auth.fetchTasks()
         }
+        if (!availableProjects.value.length) {
+            loading.value = true
+            await auth.fetchProjects()
+        }
+        if (task.value) {
+            name.value = task.value.name
+            projectId.value = task.value.project_id
+        }
+    } finally {
+        loading.value = false
     }
 })
 
@@ -52,18 +65,15 @@ async function handleSubmit() {
         loadingSubmit.value = false
     }
 }
-
-const availableProjects = computed(() => {
-    return projects.value.filter((project) => project.id !== task.value.project_id)
-})
 </script>
+
 <template>
     <section class="view-section">
-        <LoadingModal v-if="!name || !projectId || !availableProjects.length" />
+        <LoadingModal v-if="loading" />
 
         <form
             @submit.prevent="handleSubmit"
-            v-if="name && projectId && availableProjects.length"
+            v-else-if="name && projectId && availableProjects.length"
             class="view-sub-section"
         >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
@@ -120,5 +130,7 @@ const availableProjects = computed(() => {
                 </button>
             </div>
         </form>
+
+        <NotFound v-else>Could Not Load Tasks And Projects</NotFound>
     </section>
 </template>

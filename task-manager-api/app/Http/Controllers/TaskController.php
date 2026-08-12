@@ -64,9 +64,9 @@ class TaskController extends Controller
             Task::where('user_id', $userId)
                 ->where('priority', '>', $deletedPriority)
                 ->decrement('priority');
-
-            return response()->json(['message' => 'Task Deleted Successfully.'], 200);
         });
+
+        return response()->json(['message' => 'Task Deleted Successfully.']);
     }
     
     public function reorder(ReorderTaskRequest $request)

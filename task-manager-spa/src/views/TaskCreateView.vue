@@ -8,7 +8,7 @@ import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const auth = useAuthStore()
-const { projects } = storeToRefs(auth)
+const { projects, toastMessage } = storeToRefs(auth)
 
 const taskName = ref('')
 const projectId = ref(null)
@@ -28,6 +28,12 @@ async function createTask() {
         router.push({ name: 'dashboard' })
     } catch (error) {
         errorMessage.value = error?.response?.data?.errors ?? {}
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            toastMessage.value =
+                error.response?.data?.message ?? 'Check internet connection and try again'
+        }
     } finally {
         loading.value = false
     }
