@@ -5,16 +5,33 @@ import DropUpIcon from '@/components/Icons/DropUpIcon.vue'
 import EditIcon from '../Icons/EditIcon.vue'
 import DeleteIcon from '../Icons/DeleteIcon.vue'
 import LoadingIcon from '../Icons/LoadingIcon.vue'
+import { useAuthStore } from '@/stores/auth.js'
 
 defineProps(['hasProjects', 'projects'])
 
 const openProject = ref(null)
+
+const auth = useAuthStore()
+const loadingDelete = ref(false)
 
 function toggeleOpenProject(id) {
     if (openProject.value === id) {
         openProject.value = null
     } else {
         openProject.value = id
+    }
+}
+
+async function deleteProject() {
+    try {
+        loadingDelete.value = true
+        await auth.deleteProject(openProject.value)
+    } catch (error) {
+        await auth.setToast(
+            error.response?.data?.message ?? 'Check internet connection and try again',
+        )
+    } finally {
+        loadingDelete.value = false
     }
 }
 </script>
@@ -85,21 +102,23 @@ function toggeleOpenProject(id) {
                                     <span>Edit Project</span>
                                 </router-link>
 
-                                <form>
+                                <form @submit.prevent="deleteProject">
                                     <button
                                         :class="
-                                            false
+                                            loadingDelete
                                                 ? 'deleting-btn'
                                                 : 'before-delete-btn brand-transition'
                                         "
                                     >
-                                        <span v-if="true">
+                                        <span v-if="!loadingDelete">
                                             <DeleteIcon class="text-white" />
                                         </span>
-                                        <span v-if="false">
+                                        <span v-if="loadingDelete">
                                             <LoadingIcon class="text-white" />
                                         </span>
-                                        <span> {{ false ? 'Deleting...' : 'Delete Task' }} </span>
+                                        <span>
+                                            {{ loadingDelete ? 'Deleting...' : 'Delete Task' }}
+                                        </span>
                                     </button>
                                 </form>
                             </div>

@@ -64,12 +64,6 @@ export const useAuthStore = defineStore('auth', () => {
         }
     }
 
-    async function createProject(name) {
-        const response = await api.post(`/api/projects/`, { name })
-        await fetchProjects()
-        setToast(response.data.message)
-    }
-
     async function fetchTasks() {
         try {
             const response = await api.get('/api/tasks')
@@ -77,6 +71,14 @@ export const useAuthStore = defineStore('auth', () => {
         } catch (error) {
             setToast(error.response?.data?.message ?? 'Check Internet Connection and Try Again')
         }
+    }
+
+    async function createProject(name) {
+        const response = await api.post(`/api/projects/`, { name })
+        const newProject = response.data.data
+        projects.value.unshift(newProject)
+
+        setToast('Project Created Successfully')
     }
 
     async function createTask(name, project_id) {
@@ -113,6 +115,12 @@ export const useAuthStore = defineStore('auth', () => {
         setToast('Task Updated Successfully')
     }
 
+    async function deleteProject(id) {
+        const response = await api.delete(`/api/projects/${id}`)
+        projects.value = projects.value.filter((project) => project.id !== id)
+        setToast(response.data.message)
+    }
+
     async function deleteTask(id) {
         const oldTask = tasks.value.find((task) => task.id === id)
         const oldProjectId = oldTask?.project_id
@@ -142,6 +150,7 @@ export const useAuthStore = defineStore('auth', () => {
         fetchUser,
         fetchProjects,
         createProject,
+        deleteProject,
         fetchTasks,
         createTask,
         editTask,
