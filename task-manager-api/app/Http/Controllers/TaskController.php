@@ -27,11 +27,13 @@ class TaskController extends Controller
     {
         Gate::authorize('create', Task::class);
 
-        DB::transaction(function () use ($request) {
-            $request->user()->tasks()->create($request->validated());
+        $task = DB::transaction(function () use ($request) {
+            return $request->user()->tasks()->create($request->validated());
         });
 
-        return response()->json(['message' => 'Task Created Successfully']);
+        $task->load('project');
+
+        return new TaskResource($task);
     }
 
     public function update(UpdateTaskRequest $request, Task $task)

@@ -81,22 +81,50 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function createTask(name, project_id) {
         const response = await api.post(`/api/tasks/`, { name, project_id })
-        await fetchTasks()
-        setToast(response.data.message)
+        const newTask = response.data.data
+        tasks.value.push(newTask)
+
+        const project = projects.value.find((p) => p.id == project_id)
+        if (project) {
+            project.tasks.push(newTask)
+        }
+
+        setToast('Task Created Successfully')
     }
 
     async function editTask(id, name, project_id, status) {
+        const oldTask = tasks.value.find((task) => task.id === id)
+        const oldProjectId = oldTask?.project_id
+
         const response = await api.put(`/api/tasks/${id}`, { name, project_id, status })
         const updatedTask = response.data.data
-        const index = tasks.value.findIndex((t) => t.id === id)
+        const index = tasks.value.findIndex((task) => task.id === id)
         tasks.value[index] = updatedTask
+
+        if (oldProjectId && oldProjectId != project_id) {
+            const oldProject = projects.value.find((project) => project.id === oldProjectId)
+            oldProject.tasks = oldProject.tasks.filter((task) => task.id !== id)
+        }
+        if (project_id && oldProjectId != project_id) {
+            const newProject = projects.value.find((project) => project.id == project_id)
+            newProject.tasks.push(updatedTask)
+        }
+
         setToast('Task Updated Successfully')
     }
 
     async function deleteTask(id) {
+        const oldTask = tasks.value.find((task) => task.id === id)
+        const oldProjectId = oldTask?.project_id
+
         const response = await api.delete(`/api/tasks/${id}`)
-        // tasks.value = tasks.value.filter((t) => t.id !== id)
-        await fetchTasks()
+        tasks.value = tasks.value.filter((task) => task.id !== id)
+
+        if (oldProjectId) {
+            const oldProject = projects.value.find((project) => project.id === oldProjectId)
+            oldProject.tasks = oldProject.tasks.filter((task) => task.id !== id)
+        }
+
         setToast(response.data.message)
     }
 

@@ -21,7 +21,7 @@ const task = computed(() => {
 })
 
 const availableProjects = computed(() => {
-    return projects.value.filter((project) => project.id !== route.params.id)
+    return projects.value.filter((project) => project.id !== task.value?.project_id)
 })
 
 const name = ref(task.value?.name ?? '')
