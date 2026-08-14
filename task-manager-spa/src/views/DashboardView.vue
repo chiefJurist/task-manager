@@ -18,8 +18,6 @@ const firstName = computed(() => {
     return name.length > 20 ? name.substring(0, 15) + '...' : name
 })
 const hasNothing = computed(() => !projects.value.length && !tasks.value.length)
-const hasProjects = computed(() => projects.value.length)
-const hasTasks = computed(() => tasks.value.length)
 
 function toggelMobileMenuDisplay() {
     mobileMenuDisplay.value = !mobileMenuDisplay.value
@@ -62,8 +60,8 @@ onMounted(async () => {
 
         <EmptySection :loading-dashboard="loadingDashboard" :has-nothing="hasNothing" />
 
-        <TaskSection :has-tasks="hasTasks" :tasks="tasks" />
+        <TaskSection />
 
-        <ProjectsSection :has-projects="hasProjects" :projects="projects" />
+        <ProjectsSection />
     </div>
 </template>

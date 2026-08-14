@@ -12,7 +12,7 @@ class ReorderTaskRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', $this->task);
+        return $this->user() !== null;
     }
 
     /**
@@ -23,8 +23,8 @@ class ReorderTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'project_id' => 'nullable|exists:projects,id',
+            'task_ids' => 'required|array',
+            'task_ids.*' => 'integer|exists:tasks,id',
         ];
     }
 }

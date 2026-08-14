@@ -40,8 +40,11 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function logout() {
         await api.post('/api/logout')
-        user.value = null
         router.push({ name: 'login' })
+        user.value = null
+        tasks.value = []
+        projects.value = []
+        initialized.value = false
     }
 
     async function fetchUser() {
@@ -152,6 +155,22 @@ export const useAuthStore = defineStore('auth', () => {
         setToast(response.data.message)
     }
 
+    async function reorderTasks(taskIds) {
+        const previousOrder = tasks.value
+
+        try {
+            const response = await api.post('/api/tasks/reorder', { task_ids: taskIds })
+            tasks.value = response.data.data
+        } catch (error) {
+            tasks.value = previousOrder
+            if (error.response?.status === 422) {
+                errorMessage.value = error.response.data.errors ?? {}
+            } else {
+                await setToast(error.response?.data?.message ?? error)
+            }
+        }
+    }
+
     return {
         user,
         initialized,
@@ -173,5 +192,6 @@ export const useAuthStore = defineStore('auth', () => {
         editStatus,
         editTask,
         deleteTask,
+        reorderTasks,
     }
 })
