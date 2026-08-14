@@ -21,12 +21,19 @@ defineEmits(['logout', 'toggleMenu'])
                     >
                         Create Project
                     </router-link>
+
                     <router-link
                         :to="{ name: 'create-task' }"
                         class="desktop-menu-link brand-transition"
                     >
                         Create Task
                     </router-link>
+
+                    <a href="#projects" class="desktop-menu-link brand-transition">
+                        View Projects
+                    </a>
+
+                    <a href="#tasks" class="desktop-menu-link brand-transition"> View Tasks </a>
                 </div>
 
                 <!--Desktop logout button-->
@@ -76,12 +83,30 @@ defineEmits(['logout', 'toggleMenu'])
             >
                 <div v-if="mobileMenuDisplay" class="md:hidden border-t border-slate-200">
                     <div class="p-6 space-y-3">
-                        <router-link :to="{ name: 'create-project' }" class="mobile-menu-link">
+                        <router-link
+                            :to="{ name: 'create-project' }"
+                            @click="$emit('toggleMenu')"
+                            class="mobile-menu-link"
+                        >
                             Create Project
                         </router-link>
-                        <router-link :to="{ name: 'create-task' }" class="mobile-menu-link">
+
+                        <router-link
+                            :to="{ name: 'create-task' }"
+                            @click="$emit('toggleMenu')"
+                            class="mobile-menu-link"
+                        >
                             Create Task
                         </router-link>
+
+                        <a href="#projects" @click="$emit('toggleMenu')" class="mobile-menu-link">
+                            View Projects
+                        </a>
+
+                        <a href="#tasks" @click="$emit('toggleMenu')" class="mobile-menu-link"
+                            >View Tasks</a
+                        >
+
                         <button @click="$emit('logout')" class="mobile-menu-link">
                             {{ logoutLoading ? 'Logging out...' : 'Logout' }}
                         </button>
