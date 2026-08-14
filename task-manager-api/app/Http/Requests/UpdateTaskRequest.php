@@ -23,9 +23,9 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|min:5',
-            'project_id' => 'nullable|exists:projects,id',
-            'status' => 'nullable|in:completed,uncompleted'
+            'name' => 'sometimes|required|string|max:255|min:5',
+            'project_id' => 'sometimes|nullable|exists:projects,id',
+            'status' => 'sometimes|required|in:completed,uncompleted'
         ];
     }
 }

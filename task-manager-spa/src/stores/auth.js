@@ -94,11 +94,18 @@ export const useAuthStore = defineStore('auth', () => {
         setToast('Task Created Successfully')
     }
 
+    async function editStatus(id, status) {
+        const response = await api.patch(`/api/tasks/${id}`, { status })
+        const updatedTask = response.data.data
+        const index = tasks.value.findIndex((task) => task.id === id)
+        tasks.value[index] = updatedTask
+    }
+
     async function editTask(id, name, project_id, status) {
         const oldTask = tasks.value.find((task) => task.id === id)
         const oldProjectId = oldTask?.project_id
 
-        const response = await api.put(`/api/tasks/${id}`, { name, project_id, status })
+        const response = await api.patch(`/api/tasks/${id}`, { name, project_id, status })
         const updatedTask = response.data.data
         const index = tasks.value.findIndex((task) => task.id === id)
         tasks.value[index] = updatedTask
@@ -153,6 +160,7 @@ export const useAuthStore = defineStore('auth', () => {
         deleteProject,
         fetchTasks,
         createTask,
+        editStatus,
         editTask,
         deleteTask,
     }

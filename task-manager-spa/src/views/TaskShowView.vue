@@ -38,7 +38,7 @@ async function toggleStatus() {
     try {
         loadingMark.value = true
         const newStatus = task.value.status === 'completed' ? 'uncompleted' : 'completed'
-        await auth.editTask(task.value.id, task.value.name, task.value.project_id, newStatus)
+        await auth.editStatus(task.value.id, newStatus)
     } catch (error) {
         await auth.setToast(
             error.response?.data?.message ?? 'Check internet connection and try again',

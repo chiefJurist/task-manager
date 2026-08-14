@@ -95,7 +95,7 @@ async function deleteProject() {
                             <!--edit and delete project-->
                             <div class="flex justify-between items-center m-4 flex-wrap gap-2">
                                 <router-link
-                                    :to="{ name: 'edit-project' }"
+                                    :to="{ name: 'edit-project', params: { id: project.id } }"
                                     class="view-btn brand-transition"
                                 >
                                     <span><EditIcon class="text-white" /></span>
