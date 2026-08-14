@@ -13,7 +13,7 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->can('update', Project::class);
+        return $this->user()->can('update', $this->project);
     }
 
     /**
@@ -24,7 +24,7 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique'
+            'name' => 'required|string|max:255|min:5|unique:projects,name'
         ];
     }
 }

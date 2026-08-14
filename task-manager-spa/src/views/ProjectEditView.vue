@@ -1,10 +1,65 @@
 <script setup>
 import BackIcon from '@/components/Icons/BackIcon.vue'
-import DeleteIcon from '@/components/Icons/DeleteIcon.vue'
+import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
+import LoadingModal from '@/components/Modals/LoadingModal.vue'
+import NotFound from '@/components/NotFound.vue'
+import { useAuthStore } from '@/stores/auth'
+import { storeToRefs } from 'pinia'
+import { computed, onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+const auth = useAuthStore()
+const route = useRoute()
+const { projects } = storeToRefs(auth)
+
+const loading = ref(false)
+const loadingSubmit = ref(false)
+const errorMessage = ref({})
+
+const project = computed(() => {
+    return projects.value.find((project) => project.id == route.params.id)
+})
+
+const name = ref(project.value?.name ?? '')
+
+onMounted(async () => {
+    try {
+        if (!project.value) {
+            loading.value = true
+            await auth.fetchProjects()
+            await auth.fetchTasks()
+            name.value = project.value.name
+        }
+    } finally {
+        loading.value = false
+    }
+})
+
+async function editProject() {
+    loadingSubmit.value = true
+    errorMessage.value = {}
+
+    try {
+        await auth.editProject(project.value.id, name.value)
+    } catch (error) {
+        if (error.response?.status === 422) {
+            errorMessage.value = error.response.data.errors ?? {}
+        } else {
+            await auth.setToast(
+                error.response?.data?.message ?? 'Check internet connection and try again',
+            )
+        }
+    } finally {
+        loadingSubmit.value = false
+    }
+}
 </script>
+
 <template>
-    <section class="min-h-screen bg-slate-50 py-20 px-4">
-        <div class="bg-white border border-slate-100 shadow rounded-lg p-6 max-w-3xl mx-auto">
+    <section class="view-section">
+        <LoadingModal v-if="loading" />
+
+        <form v-else-if="!loading && name" @submit.prevent="editProject" class="view-sub-section">
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span><BackIcon /></span>
                 <span>Back to Dashboard</span>
@@ -17,83 +72,23 @@ import DeleteIcon from '@/components/Icons/DeleteIcon.vue'
 
             <div class="mt-10">
                 <label class="form-label">Project Name</label>
-                <input type="text" class="form-input" />
-            </div>
-
-            <div class="mt-10">
-                <h2 class="text-xl font-semibold text-center">REMOVE PROJECT TASKS</h2>
-                <div class="flex flex-col gap-5 mt-5">
-                    <div class="flex items-center gap-5">
-                        <input type="text" class="form-input" />
-                        <button
-                            class="bg-red-600 hover:bg-red-400 cursor-pointer p-2 rounded-full text-white"
-                        >
-                            <DeleteIcon />
-                        </button>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <input type="text" class="form-input" />
-                        <button
-                            class="bg-red-600 hover:bg-red-400 cursor-pointer p-2 rounded-full text-white"
-                        >
-                            <DeleteIcon />
-                        </button>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <input type="text" class="form-input" />
-                        <button
-                            class="bg-red-600 hover:bg-red-400 cursor-pointer p-2 rounded-full text-white"
-                        >
-                            <DeleteIcon />
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-10">
-                <h2 class="text-xl font-semibold text-center">ADD NEW TASK</h2>
-                <div class="mt-5">
-                    <label class="w-full block my-5">
-                        <input type="checkbox" value="Laravel" class="peer hidden" />
-                        <span
-                            class="py-3 px-4 w-full ring ring-emerald-500 cursor-pointer rounded-lg brand-transition peer-checked:bg-emerald-600 peer-checked:text-white block"
-                        >
-                            Lorem ipsum dolor sit amet consectetur.
-                        </span>
-                    </label>
-
-                    <label class="w-full block my-4">
-                        <input type="checkbox" value="Laravel" class="peer hidden" />
-                        <span
-                            class="py-3 px-4 w-full ring ring-emerald-500 cursor-pointer rounded-lg brand-transition peer-checked:bg-emerald-600 peer-checked:text-white block"
-                        >
-                            Lorem ipsum dolor sit amet consectetur.
-                        </span>
-                    </label>
-
-                    <label class="w-full block my-4">
-                        <input type="checkbox" value="Laravel" class="peer hidden" />
-                        <span
-                            class="py-3 px-4 w-full ring ring-emerald-500 cursor-pointer rounded-lg brand-transition peer-checked:bg-emerald-600 peer-checked:text-white block"
-                        >
-                            Lorem ipsum dolor sit amet consectetur.
-                        </span>
-                    </label>
-                </div>
+                <input type="text" class="form-input" v-model="name" />
             </div>
 
             <div class="my-10 flex justify-center">
                 <button
                     type="submit"
-                    :class="false ? 'form-loading' : 'form-before-loading brand-transition'"
+                    :class="loadingSubmit ? 'form-loading' : 'form-before-loading brand-transition'"
                 >
-                    <span v-if="false">
+                    <span v-if="loadingSubmit">
                         <LoadingIcon />
                     </span>
 
-                    <span>{{ false ? 'Saving...' : 'Save Task' }}</span>
+                    <span>{{ loadingSubmit ? 'Saving...' : 'Save Task' }}</span>
                 </button>
             </div>
-        </div>
+        </form>
+
+        <NotFound v-else>Project Not Found</NotFound>
     </section>
 </template>

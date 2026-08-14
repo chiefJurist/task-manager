@@ -11,7 +11,7 @@ export const useAuthStore = defineStore('auth', () => {
     const toastMessage = ref('')
     const errorMessage = ref({})
 
-    function setToast(msg, duration = 2000) {
+    function setToast(msg, duration = 3000) {
         toastMessage.value = msg
 
         setTimeout(() => (toastMessage.value = ''), duration)
@@ -101,6 +101,15 @@ export const useAuthStore = defineStore('auth', () => {
         tasks.value[index] = updatedTask
     }
 
+    async function editProject(id, name) {
+        const response = await api.put(`/api/projects/${id}`, { name })
+        const updatedProject = response.data.data
+        const index = projects.value.findIndex((project) => project.id === id)
+        projects.value[index] = updatedProject
+
+        setToast('Project Updated Successfully')
+    }
+
     async function editTask(id, name, project_id, status) {
         const oldTask = tasks.value.find((task) => task.id === id)
         const oldProjectId = oldTask?.project_id
@@ -157,6 +166,7 @@ export const useAuthStore = defineStore('auth', () => {
         fetchUser,
         fetchProjects,
         createProject,
+        editProject,
         deleteProject,
         fetchTasks,
         createTask,

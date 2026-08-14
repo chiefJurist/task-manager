@@ -31,10 +31,11 @@ class ProjectController extends Controller
 
     public function update(UpdateProjectRequest $request, Project $project) 
     {
-        Gate::authorize('update', Project::class);
+        Gate::authorize('update', $project);
         $project->update($request->validated());
+        $project->load('tasks');
 
-        return response()->json(['message' => 'Project Updated Successfully']); 
+        return new ProjectResource($project); 
     }
 
     public function destroy(Request $request, Project $project)
