@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnUpdate();
             $table->foreignId('project_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->unsignedInteger('priority');
+            $table->unsignedInteger('priority')->nullable();
             $table->enum('status', TaskStatus::cases())->default(TaskStatus::Uncompleted);
             $table->timestamps();
 

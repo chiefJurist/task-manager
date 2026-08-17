@@ -9,7 +9,7 @@ import EditIcon from '@/components/Icons/EditIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
 import router from '@/router/index'
 import LoadingModal from '@/components/Modals/LoadingModal.vue'
-import NotFound from '@/components//Modals/NotFound.vue'
+import NotFound from '@/components/Modals/NotFound.vue'
 
 const route = useRoute()
 const auth = useAuthStore()

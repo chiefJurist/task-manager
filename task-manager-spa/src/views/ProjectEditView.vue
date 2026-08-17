@@ -2,7 +2,7 @@
 import BackIcon from '@/components/Icons/BackIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
 import LoadingModal from '@/components/Modals/LoadingModal.vue'
-import NotFound from '@/components//Modals/NotFound.vue'
+import NotFound from '@/components/Modals/NotFound.vue'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref } from 'vue'

@@ -39,12 +39,16 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function logout() {
-        await api.post('/api/logout')
-        router.push({ name: 'login' })
+        const response = await api.post('/api/logout')
+
         user.value = null
         tasks.value = []
         projects.value = []
-        initialized.value = false
+        initialized.value = true
+
+        setToast(response.data.message)
+
+        await router.push({ name: 'login' })
     }
 
     async function fetchUser() {
@@ -155,11 +159,11 @@ export const useAuthStore = defineStore('auth', () => {
         setToast(response.data.message)
     }
 
-    async function reorderTasks(taskIds) {
+    async function reorderTasks(changed) {
         const previousOrder = tasks.value
 
         try {
-            const response = await api.post('/api/tasks/reorder', { task_ids: taskIds })
+            const response = await api.post('/api/tasks/reorder', { tasks: changed })
             tasks.value = response.data.data
         } catch (error) {
             tasks.value = previousOrder

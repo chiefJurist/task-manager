@@ -23,8 +23,9 @@ class ReorderTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'task_ids' => 'required|array',
-            'task_ids.*' => 'integer|exists:tasks,id',
+            'tasks' => 'required|array',
+            'tasks.*.id' => 'required|integer|exists:tasks,id',
+            'tasks.*.priority' => 'required|integer|min:1',
         ];
     }
 }

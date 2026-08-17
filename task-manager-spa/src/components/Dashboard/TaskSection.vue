@@ -4,13 +4,26 @@ import DragDropIcon from '../Icons/DragDropIcon.vue'
 import EditIcon from '../Icons/EditIcon.vue'
 import draggable from 'vuedraggable'
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 const auth = useAuthStore()
 const { tasks } = storeToRefs(auth)
+const previousTasksOrder = ref([])
+
+function onDragStart() {
+    previousTasksOrder.value = [...tasks.value]
+}
 
 async function onDragEnd() {
-    const taskIds = tasks.value.map((task) => task.id)
-    await auth.reorderTasks(taskIds)
+    const changed = []
+    tasks.value.forEach((task, index) => {
+        const oldIndex = previousTasksOrder.value.findIndex((t) => t.id === task.id)
+
+        if (oldIndex !== index) {
+            changed.push({ id: task.id, priority: index + 1 })
+        }
+    })
+    await auth.reorderTasks(changed)
 }
 </script>
 
@@ -23,18 +36,24 @@ async function onDragEnd() {
                 <span>LIST</span>
             </div>
 
-            <draggable v-model="tasks" @end="onDragEnd" item-key="id" handle=".drag-handle">
+            <draggable
+                v-model="tasks"
+                @start="onDragStart"
+                @end="onDragEnd"
+                item-key="id"
+                handle=".drag-handle"
+            >
                 <template #item="{ element: task }">
                     <router-link
                         :to="{ name: 'show-task', params: { id: task.id } }"
                         :class="
                             task.status == 'completed'
-                                ? 'completed-status-list'
-                                : 'uncompleted-status-list'
+                                ? 'completed-status-list drag-handle cursor-grab'
+                                : 'uncompleted-status-list drag-handle cursor-grab'
                         "
                     >
                         <div class="flex items-center gap-2">
-                            <DragDropIcon class="drag-handle cursor-grab" />
+                            <DragDropIcon />
                             <p>{{ task.name }}</p>
                         </div>
                         <EditIcon class="hidden md:block" />

@@ -73,25 +73,20 @@ class TaskController extends Controller
     
     public function reorder(ReorderTaskRequest $request)
     {
-        $taskIds = $request->validated('task_ids');
+        $validated = $request->validated();
+        $tasks = $validated['tasks'];
 
-        $tasks = $request->user()->tasks()
-            ->whereIn('id', $taskIds)
-            ->get()
-            ->keyBy('id');
+        DB::transaction(function () use ($tasks) {
+            foreach ($tasks as $item) {
+                Task::where('id', $item['id'])->update(['priority' => null]);
+            }
 
-        if ($tasks->count() !== count($taskIds)) {
-            abort(422, 'Invalid tasks list.');
-        };
-
-        DB::transaction(function () use ($taskIds) {
-            foreach ($taskIds as $index => $taskId) {
-                Task::where('id', $taskId)->update(['priority' => $index + 1]);
+            foreach ($tasks as $item) {
+                Task::where('id', $item['id'])->update(['priority' => $item['priority']]);
             }
         });
 
-        $ordered = collect($taskIds)->map(fn ($id) => $tasks[$id]);
-
-        return TaskResource::collection($ordered);
+        $tasks = $request->user()->tasks()->with('project')->orderBy('priority')->get();
+        return TaskResource::collection($tasks);
     }
 }

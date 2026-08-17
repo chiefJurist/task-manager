@@ -15,6 +15,7 @@ class Task extends Model
 
     protected function cast() : array {
         return [
+            'priority' => 'integer',
             'status' => TaskStatus::cases()
         ];
     }

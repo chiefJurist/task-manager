@@ -79,13 +79,18 @@ async function deleteProject() {
                     >
                         <div v-if="openProject === project.id">
                             <div v-if="project.tasks.length" class="px-4 pb-3">
-                                <div
+                                <router-link
+                                    :to="{ name: 'show-task', params: { id: task.id } }"
                                     v-for="task in project.tasks"
                                     :key="task.id"
-                                    class="p-2 my-5 text-sm border border-emerald-600 rounded"
+                                    :class="
+                                        task.status == 'completed'
+                                            ? 'completed-status-list cursor-pointer'
+                                            : 'uncompleted-status-list cursor-pointer'
+                                    "
                                 >
                                     {{ task.name }}
-                                </div>
+                                </router-link>
                             </div>
 
                             <div v-else class="px-4 pb-3 text-sm text-emerald-400 italic">

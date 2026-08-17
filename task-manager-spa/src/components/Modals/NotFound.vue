@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import BackIcon from './Icons/BackIcon.vue'
+import BackIcon from '@/components/Icons/BackIcon.vue'
 </script>
 
 <template>

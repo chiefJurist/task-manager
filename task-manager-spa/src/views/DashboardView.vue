@@ -58,7 +58,11 @@ onMounted(async () => {
             @toggle-menu="toggelMobileMenuDisplay"
         />
 
-        <EmptySection :loading-dashboard="loadingDashboard" :has-nothing="hasNothing" />
+        <EmptySection
+            v-if="hasNothing"
+            :loading-dashboard="loadingDashboard"
+            :has-nothing="hasNothing"
+        />
 
         <TaskSection />
 
