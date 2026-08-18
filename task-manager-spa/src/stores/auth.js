@@ -9,11 +9,9 @@ export const useAuthStore = defineStore('auth', () => {
     const tasks = ref([])
     const initialized = ref(false)
     const toastMessage = ref('')
-    const errorMessage = ref({})
 
     function setToast(msg, duration = 3000) {
         toastMessage.value = msg
-
         setTimeout(() => (toastMessage.value = ''), duration)
     }
 
@@ -25,17 +23,21 @@ export const useAuthStore = defineStore('auth', () => {
             password,
             password_confirmation,
         })
+
         user.value = response.data.data
         initialized.value = true
+
         router.push({ name: 'dashboard' })
     }
 
     async function login(email, password, remember) {
         await api.get('/sanctum/csrf-cookie')
         const response = await api.post('/api/login', { email, password, remember })
+
         user.value = response.data.data
         initialized.value = true
-        await router.push({ name: 'dashboard' })
+
+        router.push({ name: 'dashboard' })
     }
 
     async function logout() {
@@ -47,16 +49,16 @@ export const useAuthStore = defineStore('auth', () => {
         initialized.value = true
 
         setToast(response.data.message)
-
-        await router.push({ name: 'login' })
+        router.push({ name: 'login' })
     }
 
     async function fetchUser() {
         try {
             const response = await api.get('/api/user')
-            user.value = response.data.user
+            user.value = response.data.data
         } catch (error) {
             user.value = null
+            setToast(error.response?.data?.message ?? 'Check Internet Connection and Try Again')
         } finally {
             initialized.value = true
         }
@@ -82,17 +84,35 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function createProject(name) {
         const response = await api.post(`/api/projects/`, { name })
+
         const newProject = response.data.data
         projects.value.unshift(newProject)
 
         setToast('Project Created Successfully')
     }
 
+    async function editProject(id, name) {
+        const response = await api.put(`/api/projects/${id}`, { name })
+
+        const updatedProject = response.data.data
+        const index = projects.value.findIndex((project) => project.id === id)
+        projects.value[index] = updatedProject
+
+        setToast('Project Updated Successfully')
+    }
+
+    async function deleteProject(id) {
+        const response = await api.delete(`/api/projects/${id}`)
+        projects.value = projects.value.filter((project) => project.id !== id)
+
+        setToast(response.data.message)
+    }
+
     async function createTask(name, project_id) {
         const response = await api.post(`/api/tasks/`, { name, project_id })
+
         const newTask = response.data.data
         tasks.value.push(newTask)
-
         const project = projects.value.find((p) => p.id == project_id)
         if (project) {
             project.tasks.push(newTask)
@@ -103,25 +123,18 @@ export const useAuthStore = defineStore('auth', () => {
 
     async function editStatus(id, status) {
         const response = await api.patch(`/api/tasks/${id}`, { status })
+
         const updatedTask = response.data.data
         const index = tasks.value.findIndex((task) => task.id === id)
         tasks.value[index] = updatedTask
-    }
-
-    async function editProject(id, name) {
-        const response = await api.put(`/api/projects/${id}`, { name })
-        const updatedProject = response.data.data
-        const index = projects.value.findIndex((project) => project.id === id)
-        projects.value[index] = updatedProject
-
-        setToast('Project Updated Successfully')
     }
 
     async function editTask(id, name, project_id, status) {
         const oldTask = tasks.value.find((task) => task.id === id)
         const oldProjectId = oldTask?.project_id
 
-        const response = await api.patch(`/api/tasks/${id}`, { name, project_id, status })
+        const response = await api.patch(`/api/tasks/${id}`, { name, project_id })
+
         const updatedTask = response.data.data
         const index = tasks.value.findIndex((task) => task.id === id)
         tasks.value[index] = updatedTask
@@ -136,12 +149,6 @@ export const useAuthStore = defineStore('auth', () => {
         }
 
         setToast('Task Updated Successfully')
-    }
-
-    async function deleteProject(id) {
-        const response = await api.delete(`/api/projects/${id}`)
-        projects.value = projects.value.filter((project) => project.id !== id)
-        setToast(response.data.message)
     }
 
     async function deleteTask(id) {
@@ -160,18 +167,12 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function reorderTasks(changed) {
-        const previousOrder = tasks.value
-
         try {
             const response = await api.post('/api/tasks/reorder', { tasks: changed })
-            tasks.value = response.data.data
+
+            setToast(response.data.message, 2000)
         } catch (error) {
-            tasks.value = previousOrder
-            if (error.response?.status === 422) {
-                errorMessage.value = error.response.data.errors ?? {}
-            } else {
-                await setToast(error.response?.data?.message ?? error)
-            }
+            await setToast(error.response?.data?.message ?? error)
         }
     }
 
@@ -181,7 +182,7 @@ export const useAuthStore = defineStore('auth', () => {
         projects,
         tasks,
         toastMessage,
-        errorMessage,
+
         setToast,
         register,
         login,

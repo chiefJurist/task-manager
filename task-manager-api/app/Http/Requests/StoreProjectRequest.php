@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Project;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProjectRequest extends FormRequest
 {
@@ -24,7 +25,10 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|min:5|unique:projects,name',
+            'name' => [
+                'required', 'string', 'max:255', 'min:5',
+                Rule::unique('projects', 'name')->where('user_id', $this->user()->id)
+            ]
         ];
     }
 }

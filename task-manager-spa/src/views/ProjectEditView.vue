@@ -73,6 +73,9 @@ async function editProject() {
             <div class="mt-10">
                 <label class="form-label">Project Name</label>
                 <input type="text" class="form-input" v-model="name" />
+                <p v-if="errorMessage.name" class="form-error">
+                    {{ errorMessage.name[0] }}
+                </p>
             </div>
 
             <div class="my-10 flex justify-center">
@@ -84,7 +87,7 @@ async function editProject() {
                         <LoadingIcon />
                     </span>
 
-                    <span>{{ loadingSubmit ? 'Saving...' : 'Save Task' }}</span>
+                    <span>{{ loadingSubmit ? 'Saving...' : 'Save Project' }}</span>
                 </button>
             </div>
         </form>

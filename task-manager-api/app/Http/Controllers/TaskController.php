@@ -25,8 +25,6 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request)
     {
-        Gate::authorize('create', Task::class);
-
         $task = DB::transaction(function () use ($request) {
             return $request->user()->tasks()->create($request->validated());
         });
@@ -38,16 +36,7 @@ class TaskController extends Controller
 
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        Gate::authorize('update', $task);
         $task->update($request->validated());
-        $task->load('project');
-
-        return new TaskResource($task);
-    }
-
-    public function show(Task $task)
-    {
-        Gate::authorize('view', $task);
         $task->load('project');
 
         return new TaskResource($task);
@@ -86,7 +75,6 @@ class TaskController extends Controller
             }
         });
 
-        $tasks = $request->user()->tasks()->with('project')->orderBy('priority')->get();
-        return TaskResource::collection($tasks);
+        return response()->json(['message' => 'Reordered Successfully']);
     }
 }

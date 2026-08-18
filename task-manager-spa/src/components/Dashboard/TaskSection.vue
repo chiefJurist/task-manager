@@ -23,7 +23,9 @@ async function onDragEnd() {
             changed.push({ id: task.id, priority: index + 1 })
         }
     })
-    await auth.reorderTasks(changed)
+    if (changed.length) {
+        await auth.reorderTasks(changed)
+    }
 }
 </script>
 

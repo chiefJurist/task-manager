@@ -22,7 +22,6 @@ class ProjectController extends Controller
 
     public function store(StoreProjectRequest $request)
     {
-        Gate::authorize('create', Project::class);
         $project = $request->user()->projects()->create($request->validated());
         $project->load('tasks');
         
@@ -31,7 +30,6 @@ class ProjectController extends Controller
 
     public function update(UpdateProjectRequest $request, Project $project) 
     {
-        Gate::authorize('update', $project);
         $project->update($request->validated());
         $project->load('tasks');
 

@@ -15,6 +15,6 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     
     Route::apiResource('projects', ProjectController::class)->except(['show']);
-    Route::apiResource('tasks', TaskController::class);
+    Route::apiResource('tasks', TaskController::class)->except(['show']);
     Route::post('/tasks/reorder', [TaskController::class, 'reorder']);
 });
