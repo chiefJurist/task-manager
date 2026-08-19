@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use League\Uri\Exceptions\OffsetOutOfBounds;
 
 class TaskController extends Controller
 {
@@ -26,7 +27,11 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request)
     {
         $task = DB::transaction(function () use ($request) {
-            return $request->user()->tasks()->create($request->validated());
+            $user = User::whereKey($request->user()->id)
+            ->lockForUpdate()
+            ->firstOrFail();
+
+            return $user->tasks()->create($request->validated());
         });
 
         $task->load('project');
@@ -65,13 +70,20 @@ class TaskController extends Controller
         $validated = $request->validated();
         $tasks = $validated['tasks'];
 
-        DB::transaction(function () use ($tasks) {
+        DB::transaction(function () use ($tasks, $request) {
+            $maxPriority = Task::where('user_id', $request->user()->id)->max('priority');
+            $offset = $maxPriority + 1;
+
             foreach ($tasks as $item) {
-                Task::where('id', $item['id'])->update(['priority' => null]);
+                Task::where('user_id', $request->user()->id)
+                ->where('id', $item['id'])
+                ->update(['priority' => $item['priority'] + $offset]);
             }
 
             foreach ($tasks as $item) {
-                Task::where('id', $item['id'])->update(['priority' => $item['priority']]);
+                Task::where('user_id', $request->user()->id)
+                ->where('id', $item['id'])
+                ->update(['priority' => $item['priority']]);
             }
         });
 

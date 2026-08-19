@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\TaskStatus;
 use App\Models\Task;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,7 +22,7 @@ class TaskFactory extends Factory
             'name' => $this->faker->sentence,
             'project_id' => null,
             'priority' => null,
-            'status' => $this->faker->randomElement(['completed', 'uncompleted']),
+            'status' => $this->faker->randomElement(TaskStatus::class),
         ];
     }
 }

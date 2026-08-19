@@ -27,9 +27,7 @@ async function deleteProject() {
         loadingDelete.value = true
         await auth.deleteProject(openProject.value)
     } catch (error) {
-        await auth.setToast(
-            error.response?.data?.message ?? 'Check internet connection and try again',
-        )
+        auth.setToast(error.response?.data?.message ?? 'Check internet connection and try again')
     } finally {
         loadingDelete.value = false
     }

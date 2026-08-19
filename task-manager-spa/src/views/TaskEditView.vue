@@ -52,7 +52,7 @@ async function handleSubmit() {
         if (error.response?.status === 422) {
             errorMessage.value = error.response.data.errors ?? {}
         } else {
-            await auth.setToast(
+            auth.setToast(
                 error.response?.data?.message ?? 'Check internet connection and try again',
             )
         }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Task;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ReorderTaskRequest extends FormRequest
 {
@@ -23,9 +25,13 @@ class ReorderTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tasks' => 'required|array',
-            'tasks.*.id' => 'required|integer|exists:tasks,id',
-            'tasks.*.priority' => 'required|integer|min:1',
+            'tasks' => ['required', 'array'],
+            'tasks.*.id' => [
+                'required', 
+                'integer', 
+                Rule::exists(Task::class, 'id')->where('user_id', $this->user()->id)
+            ],
+            'tasks.*.priority' => ['required', 'integer', 'min:1'],
         ];
     }
 }

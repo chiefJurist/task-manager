@@ -167,13 +167,9 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function reorderTasks(changed) {
-        try {
-            const response = await api.post('/api/tasks/reorder', { tasks: changed })
+        const response = await api.post('/api/tasks/reorder', { tasks: changed })
 
-            setToast(response.data.message, 2000)
-        } catch (error) {
-            await setToast(error.response?.data?.message ?? error)
-        }
+        setToast(response.data.message, 2000)
     }
 
     return {
@@ -182,7 +178,6 @@ export const useAuthStore = defineStore('auth', () => {
         projects,
         tasks,
         toastMessage,
-
         setToast,
         register,
         login,

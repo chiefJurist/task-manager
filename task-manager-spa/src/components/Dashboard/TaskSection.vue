@@ -15,16 +15,25 @@ function onDragStart() {
 }
 
 async function onDragEnd() {
-    const changed = []
-    tasks.value.forEach((task, index) => {
-        const oldIndex = previousTasksOrder.value.findIndex((t) => t.id === task.id)
+    try {
+        const changed = []
 
-        if (oldIndex !== index) {
-            changed.push({ id: task.id, priority: index + 1 })
+        tasks.value.forEach((task, index) => {
+            const oldIndex = previousTasksOrder.value.findIndex((t) => t.id === task.id)
+
+            if (oldIndex !== index) {
+                changed.push({ id: task.id, priority: index + 1 })
+            }
+        })
+
+        if (changed.length) {
+            await auth.reorderTasks(changed)
         }
-    })
-    if (changed.length) {
-        await auth.reorderTasks(changed)
+    } catch (error) {
+        tasks.value = [...previousTasksOrder.value]
+        auth.setToast(error.response?.data?.message ?? 'Check Internet Connection and Try Again')
+    } finally {
+        previousTasksOrder.value = []
     }
 }
 </script>

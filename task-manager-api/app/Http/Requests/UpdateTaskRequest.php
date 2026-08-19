@@ -2,8 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TaskStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateTaskRequest extends FormRequest
 {
@@ -23,9 +25,9 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'sometimes|required|string|max:255|min:5',
-            'project_id' => 'sometimes|nullable|exists:projects,id',
-            'status' => 'sometimes|required|in:completed,uncompleted'
+            'name' => ['sometimes', 'required', 'string', 'max:255', 'min:5'],
+            'project_id' => ['sometimes', 'nullable', 'exists:projects,id'],
+            'status' => ['sometimes', 'required', Rule::enum(TaskStatus::class)]
         ];
     }
 }

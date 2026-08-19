@@ -13,10 +13,10 @@ class Task extends Model
 {
     use HasFactory;
 
-    protected function cast() : array {
+    protected function casts() : array {
         return [
             'priority' => 'integer',
-            'status' => TaskStatus::cases()
+            'status' => TaskStatus::class,
         ];
     }
     
@@ -25,7 +25,6 @@ class Task extends Model
         static::creating(function (Task $task) {
             if (is_null($task->priority)) {
                 $task->priority = static::where('user_id', $task->user_id)
-                ->lockForUpdate()
                 ->max('priority') + 1;
             }
         });

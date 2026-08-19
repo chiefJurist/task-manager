@@ -40,9 +40,7 @@ async function toggleStatus() {
         const newStatus = task.value.status === 'completed' ? 'uncompleted' : 'completed'
         await auth.editStatus(task.value.id, newStatus)
     } catch (error) {
-        await auth.setToast(
-            error.response?.data?.message ?? 'Check internet connection and try again',
-        )
+        auth.setToast(error.response?.data?.message ?? 'Check internet connection and try again')
     } finally {
         loadingMark.value = false
     }
@@ -54,9 +52,7 @@ async function deleteTask() {
         await auth.deleteTask(task.value.id)
         router.push({ name: 'dashboard' })
     } catch (error) {
-        await auth.setToast(
-            error.response?.data?.message ?? 'Check internet connection and try again',
-        )
+        auth.setToast(error.response?.data?.message ?? 'Check internet connection and try again')
     } finally {
         loadingDelete.value = false
     }
