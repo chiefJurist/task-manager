@@ -122,11 +122,20 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     async function editStatus(id, status) {
+        const task = tasks.value.find((task) => task.id == id)
+        const projectId = task?.project_id
+
         const response = await api.patch(`/api/tasks/${id}`, { status })
 
         const updatedTask = response.data.data
         const index = tasks.value.findIndex((task) => task.id === id)
         tasks.value[index] = updatedTask
+
+        if (projectId) {
+            const project = projects.value.find((project) => project.id === projectId)
+            const projectTaskIndex = project.tasks?.findIndex((task) => task.id === id)
+            project.tasks[projectTaskIndex] = updatedTask
+        }
     }
 
     async function editTask(id, name, project_id, status) {
