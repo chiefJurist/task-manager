@@ -73,11 +73,19 @@ const router = createRouter({
     ],
 })
 
+function hasSessionCookie() {
+    return document.cookie.includes('XSRF-TOKEN')
+}
+
 router.beforeEach(async (to) => {
     const auth = useAuthStore()
 
     if (!auth.initialized) {
-        await auth.fetchUser()
+        if (hasSessionCookie()) {
+            await auth.fetchUser()
+        } else {
+            auth.initialized = true
+        }
     }
 
     if (to.meta.requiresAuth && !auth.user) {

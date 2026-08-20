@@ -21,7 +21,6 @@ async function createProject() {
         await auth.createProject(projectName.value)
         router.push({ name: 'dashboard' })
     } catch (error) {
-        errorMessage.value = error?.response?.data?.errors ?? {}
         if (error.response?.status === 422) {
             errorMessage.value = error.response.data.errors ?? {}
         } else {

@@ -27,8 +27,7 @@ onMounted(async () => {
         if (!project.value) {
             loading.value = true
             await auth.fetchProjects()
-            await auth.fetchTasks()
-            name.value = project.value.name
+            name.value = project.value?.name ?? ''
         }
     } finally {
         loading.value = false

@@ -52,6 +52,8 @@ export const useAuthStore = defineStore('auth', () => {
         projects.value = []
         initialized.value = true
 
+        document.cookie = 'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+
         setToast(response.data.message)
         router.push({ name: 'login' })
     }
@@ -59,7 +61,10 @@ export const useAuthStore = defineStore('auth', () => {
     async function fetchUser() {
         try {
             const response = await api.get('/api/user')
+
             user.value = response.data.data
+            projects.value = user.value.projects
+            tasks.value = user.value.tasks
         } catch (error) {
             user.value = null
             setToast(error.response?.data?.message ?? 'Check Internet Connection and Try Again')
@@ -140,6 +145,8 @@ export const useAuthStore = defineStore('auth', () => {
             const projectTaskIndex = project.tasks?.findIndex((task) => task.id === id)
             project.tasks[projectTaskIndex] = updatedTask
         }
+
+        setToast('Task Status Updated Successfully', 1000)
     }
 
     async function editTask(id, name, project_id, status) {

@@ -17,7 +17,9 @@ const taskName = ref('')
 const projectId = ref(null)
 
 onMounted(async () => {
-    await auth.fetchProjects()
+    if (!projects.value) {
+        await auth.fetchProjects()
+    }
 })
 
 async function createTask() {
@@ -28,7 +30,6 @@ async function createTask() {
         await auth.createTask(taskName.value, projectId.value)
         router.push({ name: 'dashboard' })
     } catch (error) {
-        errorMessage.value = error?.response?.data?.errors ?? {}
         if (error.response?.status === 422) {
             errorMessage.value = error.response.data.errors ?? {}
         } else {

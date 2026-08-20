@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import BackIcon from '@/components/Icons/BackIcon.vue'
 </script>
 

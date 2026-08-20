@@ -30,12 +30,12 @@ const errorMessage = ref({})
 
 onMounted(async () => {
     try {
-        if (!task.value || !availableProjects.value.length) {
+        if (!task.value || !availableProjects.value) {
             loading.value = true
             await auth.fetchTasks()
             await auth.fetchProjects()
-            name.value = task.value.name
-            projectId.value = task.value.project_id
+            name.value = task.value?.name ?? ''
+            projectId.value = task.value?.project_id ?? 'null'
         }
     } finally {
         loading.value = false
