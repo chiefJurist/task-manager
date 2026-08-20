@@ -59,7 +59,11 @@ async function editProject() {
     <section class="view-section">
         <LoadingModal v-if="loading" />
 
-        <form v-else-if="!loading && name" @submit.prevent="editProject" class="view-sub-section">
+        <form
+            v-else-if="!loading && project"
+            @submit.prevent="editProject"
+            class="view-sub-section"
+        >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span><BackIcon /></span>
                 <span>Back to Dashboard</span>

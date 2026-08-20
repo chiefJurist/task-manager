@@ -10,7 +10,7 @@ export const useAuthStore = defineStore('auth', () => {
     const initialized = ref(false)
     const toastMessage = ref('')
 
-    function setToast(msg, duration = 3000) {
+    function setToast(msg, duration = 2000) {
         toastMessage.value = msg
         setTimeout(() => (toastMessage.value = ''), duration)
     }
@@ -178,7 +178,13 @@ export const useAuthStore = defineStore('auth', () => {
     async function reorderTasks(changed) {
         const response = await api.post('/api/tasks/reorder', { tasks: changed })
 
-        setToast(response.data.message, 2000)
+        const updatedTasks = response.data.data
+        updatedTasks.forEach((updated) => {
+            const unchangedTask = tasks.value.find((task) => task.id === updated.id)
+            unchangedTask.priority = updated.priority
+        })
+
+        setToast('Task Reordered Successfully', 1000)
     }
 
     return {

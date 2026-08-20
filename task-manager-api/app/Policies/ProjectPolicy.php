@@ -15,11 +15,6 @@ class ProjectPolicy
         return true;
     }
 
-    public function view(User $user, Project $project)
-    {
-        return $user->id === $project->user_id;
-    }
-
     public function create(User $user)
     {
         return true;

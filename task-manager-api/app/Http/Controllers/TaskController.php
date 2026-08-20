@@ -11,7 +11,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use League\Uri\Exceptions\OffsetOutOfBounds;
 
 class TaskController extends Controller
 {
@@ -87,6 +86,9 @@ class TaskController extends Controller
             }
         });
 
-        return response()->json(['message' => 'Reordered Successfully']);
+
+        $updated = Task::whereIn('id', collect($tasks)->pluck('id'))->get();
+
+        return TaskResource::collection($updated);
     }
 }

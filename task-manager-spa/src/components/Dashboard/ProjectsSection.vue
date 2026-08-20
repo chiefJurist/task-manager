@@ -120,7 +120,7 @@ async function deleteProject() {
                                             <LoadingIcon class="text-white" />
                                         </span>
                                         <span>
-                                            {{ loadingDelete ? 'Deleting...' : 'Delete Task' }}
+                                            {{ loadingDelete ? 'Deleting...' : 'Delete Project' }}
                                         </span>
                                     </button>
                                 </form>
