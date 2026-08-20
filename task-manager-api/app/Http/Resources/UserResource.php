@@ -20,6 +20,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'tasks' => TaskResource::collection($this->whenLoaded('tasks')),
             'projects' => ProjectResource::collection($this->whenLoaded('projects')),
         ];
     }

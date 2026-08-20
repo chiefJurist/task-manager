@@ -25,6 +25,8 @@ export const useAuthStore = defineStore('auth', () => {
         })
 
         user.value = response.data.data
+        projects.value = user.value.projects
+        tasks.value = user.value.tasks
         initialized.value = true
 
         router.push({ name: 'dashboard' })
@@ -35,6 +37,8 @@ export const useAuthStore = defineStore('auth', () => {
         const response = await api.post('/api/login', { email, password, remember })
 
         user.value = response.data.data
+        projects.value = user.value.projects
+        tasks.value = user.value.tasks
         initialized.value = true
 
         router.push({ name: 'dashboard' })
