@@ -86,6 +86,8 @@ export const useAuthStore = defineStore('auth', () => {
         try {
             const response = await api.get('/api/tasks')
             tasks.value = response.data.data
+
+            initialized.value = true
         } catch (error) {
             setToast(error.response?.data?.message ?? 'Check Internet Connection and Try Again')
         }
@@ -107,12 +109,24 @@ export const useAuthStore = defineStore('auth', () => {
         const index = projects.value.findIndex((project) => project.id === id)
         projects.value[index] = updatedProject
 
+        const unchangedTasks = tasks.value.filter((task) => task.project_id === id)
+        unchangedTasks.forEach((task) => {
+            task.project.name = name
+        })
+
         setToast('Project Updated Successfully')
     }
 
     async function deleteProject(id) {
         const response = await api.delete(`/api/projects/${id}`)
+
         projects.value = projects.value.filter((project) => project.id !== id)
+
+        const unchangedTasks = tasks.value.filter((task) => task.project_id === id)
+        unchangedTasks.forEach((task) => {
+            task.project_id = null
+            task.project = null
+        })
 
         setToast(response.data.message)
     }
@@ -149,7 +163,7 @@ export const useAuthStore = defineStore('auth', () => {
         setToast('Task Status Updated Successfully', 1000)
     }
 
-    async function editTask(id, name, project_id, status) {
+    async function editTask(id, name, project_id) {
         const oldTask = tasks.value.find((task) => task.id === id)
         const oldProjectId = oldTask?.project_id
 

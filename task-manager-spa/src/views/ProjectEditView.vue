@@ -10,7 +10,7 @@ import { useRoute } from 'vue-router'
 
 const auth = useAuthStore()
 const route = useRoute()
-const { projects } = storeToRefs(auth)
+const { projects, initialized } = storeToRefs(auth)
 
 const loading = ref(false)
 const loadingSubmit = ref(false)
@@ -23,14 +23,14 @@ const project = computed(() => {
 const name = ref(project.value?.name ?? '')
 
 onMounted(async () => {
-    try {
-        if (!project.value) {
+    if (!initialized) {
+        try {
             loading.value = true
             await auth.fetchProjects()
             name.value = project.value?.name ?? ''
+        } finally {
+            loading.value = false
         }
-    } finally {
-        loading.value = false
     }
 })
 

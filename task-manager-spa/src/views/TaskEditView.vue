@@ -11,7 +11,7 @@ import { useRoute } from 'vue-router'
 
 const auth = useAuthStore()
 const route = useRoute()
-const { tasks, projects } = storeToRefs(auth)
+const { tasks, projects, initialized } = storeToRefs(auth)
 
 const loading = ref(false)
 const loadingSubmit = ref(false)
@@ -29,16 +29,16 @@ const projectId = ref(task.value?.project_id ?? null)
 const errorMessage = ref({})
 
 onMounted(async () => {
-    try {
-        if (!task.value || !availableProjects.value) {
+    if (!initialized.value) {
+        try {
             loading.value = true
             await auth.fetchTasks()
             await auth.fetchProjects()
             name.value = task.value?.name ?? ''
             projectId.value = task.value?.project_id ?? 'null'
+        } finally {
+            loading.value = false
         }
-    } finally {
-        loading.value = false
     }
 })
 

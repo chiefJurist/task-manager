@@ -13,7 +13,7 @@ import NotFound from '@/components/Modals/NotFound.vue'
 
 const route = useRoute()
 const auth = useAuthStore()
-const { tasks } = storeToRefs(auth)
+const { tasks, initialized } = storeToRefs(auth)
 
 const loading = ref(false)
 const loadingMark = ref(false)
@@ -24,13 +24,13 @@ const task = computed(() => {
 })
 
 onMounted(async () => {
-    try {
-        if (!task.value) {
+    if (!initialized.value) {
+        try {
             loading.value = true
             await auth.fetchTasks()
+        } finally {
+            loading.value = false
         }
-    } finally {
-        loading.value = false
     }
 })
 
@@ -90,7 +90,7 @@ async function deleteTask() {
             </p>
 
             <div class="grid grid-cols-1 gap-5 mt-5">
-                <p class="show-task-paragraph" v-if="task.project_id">
+                <p class="show-task-paragraph" v-if="task.project">
                     <span class="show-task-paragrapgh-label">PROJECT NAME:</span>
                     <span>{{ task.project.name }}</span>
                 </p>

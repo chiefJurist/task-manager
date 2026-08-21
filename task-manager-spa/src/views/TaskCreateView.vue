@@ -1,6 +1,7 @@
 <script setup>
 import BackIcon from '@/components/Icons/BackIcon.vue'
 import LoadingIcon from '@/components/Icons/LoadingIcon.vue'
+import LoadingModal from '@/components/Modals/LoadingModal.vue'
 import router from '@/router/index'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
@@ -8,7 +9,7 @@ import { onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
 const auth = useAuthStore()
-const { projects } = storeToRefs(auth)
+const { projects, initialized } = storeToRefs(auth)
 
 const loading = ref(false)
 const errorMessage = ref({})
@@ -17,7 +18,7 @@ const taskName = ref('')
 const projectId = ref(null)
 
 onMounted(async () => {
-    if (!projects.value) {
+    if (!initialized) {
         await auth.fetchProjects()
     }
 })
@@ -44,7 +45,13 @@ async function createTask() {
 </script>
 <template>
     <section class="view-section">
-        <form @submit.prevent="createTask" class="view-sub-section">
+        <LoadingModal v-if="loading" />
+
+        <form
+            v-else-if="!loading && initialized"
+            @submit.prevent="createTask"
+            class="view-sub-section"
+        >
             <router-link :to="{ name: 'dashboard' }" class="nav-link">
                 <span>
                     <BackIcon />
@@ -68,7 +75,7 @@ async function createTask() {
                 </p>
             </div>
 
-            <div class="mt-5">
+            <div v-if="projects.length" class="mt-5">
                 <label class="form-label">Choose Associated Project</label>
                 <select class="form-input cursor-pointer" v-model="projectId">
                     <option :value="null">Select a Project</option>

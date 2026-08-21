@@ -1,5 +1,6 @@
 <script setup>
 import { RouterLink } from 'vue-router'
+import LoadingIcon from '../Icons/LoadingIcon.vue'
 
 defineProps(['firstName', 'mobileMenuDisplay', 'logoutLoading'])
 defineEmits(['logout', 'toggleMenu'])
@@ -42,10 +43,11 @@ defineEmits(['logout', 'toggleMenu'])
                         @click="$emit('logout')"
                         :class="
                             logoutLoading
-                                ? 'bg-red-400 px-5 py-3 rounded mr-3 brand-transition cursor-not-allowed'
+                                ? 'bg-red-400 px-5 py-3 rounded mr-3 brand-transition cursor-not-allowed flex gap-1 items-center'
                                 : 'bg-red-600/80 px-5 py-3 rounded cursor-pointer mr-3 hover:bg-red-400 brand-transition'
                         "
                     >
+                        <LoadingIcon v-if="logoutLoading" />
                         {{ logoutLoading ? 'Logging out...' : 'Logout' }}
                     </button>
                 </div>

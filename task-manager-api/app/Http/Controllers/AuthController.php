@@ -28,7 +28,7 @@ class AuthController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        $user->load(['projects.tasks', 'tasks']);
+        $user->load(['projects.tasks', 'tasks.project']);
         return new UserResource($user);
     }
 
@@ -50,7 +50,7 @@ class AuthController extends Controller
         $request->session()->regenerate();
 
         $user = Auth::user();
-        $user->load(['projects.tasks', 'tasks']);
+        $user->load(['projects.tasks', 'tasks.project']);
         return new UserResource($user);
     }
 
@@ -65,7 +65,7 @@ class AuthController extends Controller
 
     public function user(Request $request)
     {
-        $user = $request->user()->load(['projects.tasks', 'tasks']);
+        $user = $request->user()->load(['projects.tasks', 'tasks.project']);
         return new UserResource($user);
     }
 }
