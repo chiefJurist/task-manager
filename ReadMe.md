@@ -1,6 +1,6 @@
 # Task Manager
 
-A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API and Vue SPA.
+A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API and Vue SPA application.
 
 ## Project Structure
 
