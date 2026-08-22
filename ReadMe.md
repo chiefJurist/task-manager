@@ -1,6 +1,6 @@
 # Task Manager
 
-A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API and Vue SPA application.
+A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API and a Vue SPA.
 
 ## Project Structure
 
@@ -11,7 +11,7 @@ task-manager/
 ## Features
 
 - Create, edit, update and delete tasks and projects. 
-- Drag-and-drop reordering task priority automatically based on a priority column. 
+- Drag-and-drop, reordering task priority automatically based on a priority column. 
 - Tasks can be filtered by project using a dropdown. 
 - Login and registration are handled through Laravel Sanctum.
 
@@ -35,7 +35,7 @@ a). MOVE INTO THE BACKEND FOLDER AND INSTALL DEPENDENCIES:
 - cp .env.example .env
 - php artisan key:generate
 
-b). SET YOUR DATABASE CREDENSIALS IN .env:
+b). SET YOUR DATABASE CREDENTIALS IN .env:
 ```
 DB_DATABASE=task_manager_api
 DB_USERNAME=root
@@ -52,27 +52,33 @@ SANCTUM_STATEFUL_DOMAINS=localhost:5173
 d). CREATE THE DATABASE AND RUN MIGRATIONS:
 - php artisan migrate --seed
 
+This would create three user accounts with tasks and projects. One of the user has a predicable email and password and the other two are unpredictable emails and the same predictable password (password). Below are the credentials.
+- email: anthonynnanna@ct.com
+- passowrd: password
+
 e). START THE SERVER:
 - php artisan serve
+OR
+- composer run dev. 
 
 This runs the API at http://localhost:8000.
+
+Startup other backend services if you have other methods of starting your MYSQL or PHPMyAdmin.
 
 
 ### 2. Frontend (task-manager-spa)
 
-Move into the frontend folder and install dependencies:
+a). MOVE INTO THE FRONTEND FOLDER AND INSTALL DEPENDENCIES:
+- cd task-manager-spa
+- npm install
 
-cd task-manager-spa
-npm install
-cp .env.example .env
+b). SET THE baseURL IN src/lib/axios.js:
+```
+baseURL: 'http://localhost:8000'
+```
 
-Set the API URL in .env:
-
-VITE_API_URL=http://localhost:8000
-
-Start the dev server:
-
-npm run dev
+c). START THE DEV SERVER:
+- npm run dev
 
 This runs the frontend at http://localhost:5173.
 
@@ -80,23 +86,10 @@ If port 5173 is already in use, Vite will pick another port. If that happens, up
 
 ### 3. Using the App
 
-Open http://localhost:5173 in your browser, register or log in, then create, edit, delete, and reorder tasks. Use the project dropdown to filter the task list.
-
-## API Routes
-
-Auth routes: POST /api/register to register, POST /api/login to log in, POST /api/logout to log out, and GET /api/user to fetch the current user.
-
-Project routes: GET and POST on /api/projects to list or create projects, and PUT or DELETE on /api/projects/{id} to update or delete one.
-
-Task routes: GET and POST on /api/tasks to list or create tasks, PUT or DELETE on /api/tasks/{id} to update or delete one, and POST /api/tasks/reorder to update task priorities after a drag-and-drop reorder.
+Open http://localhost:5173 in your browser, register or log in, then create, edit, delete, update and reorder tasks and projects. Use the project dropdown to filter the task list.
 
 ## Deployment
 
-For the API, deploy it like any Laravel app, for example with Forge or a VPS running nginx and php-fpm. Set APP_ENV=production and APP_DEBUG=false, run php artisan config:cache route:cache view:cache, and point FRONTEND_URL and SANCTUM_STATEFUL_DOMAINS at your production frontend domain.
+For the API, deploy it like any Laravel app, for example with Forge or a VPS running nginx and php-fpm. Set APP_ENV=production and APP_DEBUG=false, run php artisan config:cache route:cache view:cache and point FRONTEND_URL and SANCTUM_STATEFUL_DOMAINS at your production frontend domain.
 
-For the frontend, run npm run build to generate a static dist/ folder, then serve it from any static host such as Netlify, Vercel, S3, or nginx. Set VITE_API_URL to your production API URL at build time.
-
-## Testing
-
-cd task-manager-api
-php artisan test
+For the frontend, run npm run build to generate a static dist/ folder, then serve it from any static host such as Netlify, Vercel, S3 or nginx. Set axios.js baseURL to your production API URL at build time.
