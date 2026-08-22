@@ -10,16 +10,16 @@ task-manager/
 
 ## Features
 
-Create, edit, update and delete tasks and projects. 
-Drag-and-drop reordering task priority automatically based on a priority column. 
-Tasks can be filtered by project using a dropdown. 
-Login and registration are handled through Laravel Sanctum.
+- Create, edit, update and delete tasks and projects. 
+- Drag-and-drop reordering task priority automatically based on a priority column. 
+- Tasks can be filtered by project using a dropdown. 
+- Login and registration are handled through Laravel Sanctum.
 
 ## Tech Stack
 
-The backend is built with PHP 8.3, Laravel 13 and MySQL.
-The frontend is built with Vue 3, Tailwind CSS and Vite.
-Authentication uses Laravel Sanctum with SPA cookie auth.
+- The backend is built with PHP 8.3, Laravel 13 and MySQL.
+- The frontend is built with Vue 3, Tailwind CSS and Vite.
+- Authentication uses Laravel Sanctum with SPA cookie auth.
 
 ## Setup
 
