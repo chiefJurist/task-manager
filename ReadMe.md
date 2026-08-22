@@ -1,4 +1,3 @@
-```
 # Task Manager
 
 A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API + Vue SPA.
@@ -97,4 +96,3 @@ For the frontend, run npm run build to generate a static dist/ folder, then serv
 
 cd task-manager-api
 php artisan test
-```
