@@ -30,12 +30,12 @@ You will need PHP 8.3 or higher with Composer, Node.js 18 or higher with npm and
 ### 1. Backend (task-manager-api)
 
 Move into the backend folder and install dependencies:
-
+```
 cd task-manager-api
 composer install
 cp .env.example .env
 php artisan key:generate
-
+```
 Set your database credentials in .env:
 
 DB_DATABASE=task_manager_api
