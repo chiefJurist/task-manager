@@ -29,36 +29,34 @@ You will need PHP 8.3 or higher with Composer, Node.js 18 or higher with npm and
 
 ### 1. Backend (task-manager-api)
 
-a. MOVE INTO THE BACKEND FOLDER AND INSTALL DEPENDENCIES:
-```
-cd task-manager-api
-composer install
-cp .env.example .env
-php artisan key:generate
-```
+a). MOVE INTO THE BACKEND FOLDER AND INSTALL DEPENDENCIES:
+- cd task-manager-api
+- composer install
+- cp .env.example .env
+- php artisan key:generate
 
-b. SET YOUR DATABASE CREDENSIALS IN .env:
+b). SET YOUR DATABASE CREDENSIALS IN .env:
 ```
 DB_DATABASE=task_manager_api
 DB_USERNAME=root
 DB_PASSWORD=your_password_here
 ```
 
-c. ALSO CONFIRM THESE VALUES MATCH YOUR FRONTEND'S URL:
-- APP_URL=http://localhost:8000
-- FRONTEND_URL=http://localhost:5173
-- SANCTUM_STATEFUL_DOMAINS=localhost:5173
+c). ALSO CONFIRM THESE VALUES MATCH YOUR FRONTEND'S URL:
+```
+APP_URL=http://localhost:8000
+FRONTEND_URL=http://localhost:5173
+SANCTUM_STATEFUL_DOMAINS=localhost:5173
+```
 
-d. CREATE THE DATABASE AND RUN MIGRATIONS:
+d). CREATE THE DATABASE AND RUN MIGRATIONS:
+- php artisan migrate --seed
 
-mysql -u root -p -e "CREATE DATABASE task_manager_api"
-php artisan migrate --seed
-
-Start the server:
-
-php artisan serve
+e). START THE SERVER:
+- php artisan serve
 
 This runs the API at http://localhost:8000.
+
 
 ### 2. Frontend (task-manager-spa)
 
