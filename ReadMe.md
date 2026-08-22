@@ -1,26 +1,31 @@
 # Task Manager
 
-A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API + Vue SPA.
-
-## Features
-
-Create, edit, and delete tasks. Drag-and-drop reordering updates task priority automatically based on order. Tasks can be filtered by project using a dropdown. Login and registration are handled through Laravel Sanctum.
-
-## Tech Stack
-
-The backend is built with PHP 8.3, Laravel 11, and MySQL. The frontend is built with Vue 3, Tailwind CSS, and Vite. Authentication uses Laravel Sanctum with SPA cookie auth.
+A task management app with drag-and-drop reordering and project filtering. Built as a Laravel API and Vue SPA.
 
 ## Project Structure
 
 task-manager/
-- task-manager-api/ — Laravel API
-- task-manager-spa/ — Vue frontend
+- task-manager-api/ (Laravel API)
+- task-manager-spa/ (Vue frontend)
+
+## Features
+
+Create, edit, update and delete tasks and projects. 
+Drag-and-drop reordering task priority automatically based on a priority column. 
+Tasks can be filtered by project using a dropdown. 
+Login and registration are handled through Laravel Sanctum.
+
+## Tech Stack
+
+The backend is built with PHP 8.3, Laravel 13 and MySQL.
+The frontend is built with Vue 3, Tailwind CSS and Vite.
+Authentication uses Laravel Sanctum with SPA cookie auth.
 
 ## Setup
 
 ### Requirements
 
-You will need PHP 8.3 or higher with Composer, Node.js 18 or higher with npm, and MySQL installed.
+You will need PHP 8.3 or higher with Composer, Node.js 18 or higher with npm and MySQL installed.
 
 ### 1. Backend (task-manager-api)
 
