@@ -54,7 +54,7 @@ d). CREATE THE DATABASE AND RUN MIGRATIONS:
 
 This would create three user accounts with tasks and projects. One of the user has a predicable email and password and the other two are unpredictable emails and the same predictable password (password). Below are the credentials.
 - email: anthonynnanna@ct.com
-- passowrd: password
+- password: password
 
 e). START THE SERVER:
 - php artisan serve
